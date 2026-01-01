@@ -30,6 +30,7 @@ import {
   FaCalendarCheck,
   FaFileInvoice,
   FaUsersCog,
+  FaClock,
 } from "react-icons/fa";
 
 const Sidebar = ({ onClose }) => {
@@ -75,6 +76,18 @@ const Sidebar = ({ onClose }) => {
       icon: <FaTasks />,
       badge: "3️⃣ Finally",
       badgeColor: "bg-purple-500",
+    },
+    {
+      name: "Time Tracking",
+      path: "/time-tracking",
+      icon: <FaClock />,
+      badge: "⏱️ NEW",
+      badgeColor: "bg-gradient-to-r from-orange-500 to-red-500",
+    },
+    {
+      name: "Timesheet",
+      path: "/timesheet",
+      icon: <FaChartBar />,
     },
     {
       name: "Calendar",

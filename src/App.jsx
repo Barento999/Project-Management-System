@@ -18,6 +18,10 @@ import ProjectsSimple from "./pages/ProjectsSimple";
 import ProjectsBeautiful from "./pages/ProjectsBeautiful";
 import Tasks from "./pages/Tasks";
 import TasksBeautiful from "./pages/TasksBeautiful";
+import TaskDetailsBeautiful from "./pages/TaskDetailsBeautiful";
+import ProjectDetailsBeautiful from "./pages/ProjectDetailsBeautiful";
+import TimeTrackingBeautiful from "./pages/TimeTrackingBeautiful";
+import TimesheetBeautiful from "./pages/TimesheetBeautiful";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import Calendar from "./pages/Calendar";
@@ -137,6 +141,14 @@ function App() {
                           }
                         />
                         <Route
+                          path="/projects/:id"
+                          element={
+                            <ProtectedRoute>
+                              <ProjectDetailsBeautiful />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
                           path="/projects/create"
                           element={
                             <ProtectedRoute>
@@ -161,6 +173,14 @@ function App() {
                           }
                         />
                         <Route
+                          path="/tasks/:id"
+                          element={
+                            <ProtectedRoute>
+                              <TaskDetailsBeautiful />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
                           path="/tasks/my"
                           element={
                             <ProtectedRoute>
@@ -181,6 +201,22 @@ function App() {
                           element={
                             <ProtectedRoute>
                               <TasksBoard />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/time-tracking"
+                          element={
+                            <ProtectedRoute>
+                              <TimeTrackingBeautiful />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/timesheet"
+                          element={
+                            <ProtectedRoute>
+                              <TimesheetBeautiful />
                             </ProtectedRoute>
                           }
                         />

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { taskAPI, projectAPI } from "../services/api";
 import {
   FaPlus,
@@ -12,6 +13,7 @@ import {
 } from "react-icons/fa";
 
 const TasksBeautiful = () => {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -470,7 +472,8 @@ const TasksBeautiful = () => {
             {filteredTasks.map((task, index) => (
               <div
                 key={task._id}
-                className="group bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden border border-white/50"
+                onClick={() => navigate(`/tasks/${task._id}`)}
+                className="group bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden border border-white/50 cursor-pointer"
                 style={{ animationDelay: `${index * 100}ms` }}>
                 {/* Card Header */}
                 <div
@@ -506,7 +509,8 @@ const TasksBeautiful = () => {
                     {/* Actions */}
                     <div className="flex gap-1 sm:gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setCurrentTask(task);
                           setShowEditForm(true);
                         }}
@@ -514,7 +518,10 @@ const TasksBeautiful = () => {
                         <FaEdit className="text-sm" />
                       </button>
                       <button
-                        onClick={() => handleDeleteTask(task._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteTask(task._id);
+                        }}
                         className="p-1.5 sm:p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors">
                         <FaTrash className="text-sm" />
                       </button>
