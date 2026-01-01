@@ -33,6 +33,35 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
+    // Generate verification token and send email
+    let emailSent = false;
+    if (process.env.ENABLE_EMAIL_VERIFICATION === "true") {
+      try {
+        const crypto = require("crypto");
+        const verificationToken = crypto.randomBytes(32).toString("hex");
+
+        user.emailVerificationToken = crypto
+          .createHash("sha256")
+          .update(verificationToken)
+          .digest("hex");
+
+        user.emailVerificationExpire = Date.now() + 86400000; // 24 hours
+
+        await user.save();
+
+        // Send verification email
+        const { sendEmailVerification } = require("../utils/emailService");
+        await sendEmailVerification(user, verificationToken);
+        emailSent = true;
+      } catch (emailError) {
+        console.error(
+          "❌ Failed to send verification email:",
+          emailError.message
+        );
+        // Don't fail registration if email fails
+      }
+    }
+
     res.status(201).json({
       success: true,
       user: {
@@ -41,8 +70,13 @@ const registerUser = asyncHandler(async (req, res) => {
         email: user.email,
         role: user.role,
         avatar: user.avatar,
+        isEmailVerified: user.isEmailVerified,
       },
       token: generateToken(user._id),
+      message:
+        process.env.ENABLE_EMAIL_VERIFICATION === "true" && emailSent
+          ? "Registration successful! Please check your email to verify your account."
+          : "Registration successful!",
     });
   } else {
     res.status(400).json({
@@ -271,13 +305,21 @@ const sendVerificationEmail = asyncHandler(async (req, res) => {
   await user.save();
 
   // Send email
-  const { sendEmailVerification } = require("../utils/emailService");
-  await sendEmailVerification(user, verificationToken);
+  try {
+    const { sendEmailVerification } = require("../utils/emailService");
+    await sendEmailVerification(user, verificationToken);
 
-  res.status(200).json({
-    success: true,
-    message: "Verification email sent",
-  });
+    res.status(200).json({
+      success: true,
+      message: "Verification email sent",
+    });
+  } catch (error) {
+    console.error("❌ Failed to send verification email:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to send verification email. Please try again later.",
+    });
+  }
 });
 
 // @desc    Verify email

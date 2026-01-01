@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { authAPI } from "../services/api";
 import {
   FaUser,
   FaEnvelope,
@@ -8,6 +9,8 @@ import {
   FaSave,
   FaCamera,
   FaRocket,
+  FaExclamationTriangle,
+  FaCheckCircle,
 } from "react-icons/fa";
 
 const ProfileBeautiful = () => {
@@ -19,6 +22,8 @@ const ProfileBeautiful = () => {
   });
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [sendingVerification, setSendingVerification] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -35,6 +40,28 @@ const ProfileBeautiful = () => {
     // Save logic here
     setIsEditing(false);
     alert("Profile updated successfully!");
+  };
+
+  const handleResendVerification = async () => {
+    setSendingVerification(true);
+    try {
+      const response = await authAPI.sendVerification();
+      if (response.data.success) {
+        setVerificationSent(true);
+        setTimeout(() => setVerificationSent(false), 5000);
+      } else {
+        alert(response.data.message || "Failed to send verification email");
+      }
+    } catch (error) {
+      console.error("Verification email error:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to send verification email";
+      alert(errorMessage);
+    } finally {
+      setSendingVerification(false);
+    }
   };
 
   if (loading) {
@@ -69,6 +96,66 @@ const ProfileBeautiful = () => {
             Manage your account information
           </p>
         </div>
+
+        {/* Email Verification Banner */}
+        {user && !user.isEmailVerified && (
+          <div className="mb-6 bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-500 rounded-lg p-6 shadow-lg">
+            <div className="flex items-start">
+              <FaExclamationTriangle className="text-yellow-600 text-2xl mr-4 mt-1 flex-shrink-0" />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-yellow-900 mb-2">
+                  Email Not Verified
+                </h3>
+                <p className="text-yellow-800 mb-4">
+                  Please verify your email address to access all features. Check
+                  your inbox for the verification link.
+                </p>
+                {verificationSent ? (
+                  <div className="flex items-center text-green-700 bg-green-50 px-4 py-2 rounded-lg">
+                    <FaCheckCircle className="mr-2" />
+                    <span className="font-medium">
+                      Verification email sent! Check your inbox.
+                    </span>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleResendVerification}
+                    disabled={sendingVerification}
+                    className="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                    {sendingVerification ? (
+                      <>
+                        <svg
+                          className="animate-spin h-4 w-4"
+                          viewBox="0 0 24 24">
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                            fill="none"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <FaEnvelope />
+                        Resend Verification Email
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Profile Card */}
         <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 overflow-hidden">

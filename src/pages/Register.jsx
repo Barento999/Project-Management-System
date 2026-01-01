@@ -19,6 +19,7 @@ const Register = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -30,11 +31,13 @@ const Register = () => {
       [e.target.name]: e.target.value,
     });
     setError("");
+    setSuccess("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters long");
@@ -56,7 +59,16 @@ const Register = () => {
       );
 
       if (result.success) {
-        navigate("/dashboard");
+        // Show verification message if email verification is enabled
+        if (result.message && result.message.includes("verify")) {
+          setSuccess(result.message);
+          // Wait 3 seconds before redirecting
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 3000);
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         setError(result.message || "Registration failed");
       }
@@ -106,6 +118,29 @@ const Register = () => {
                   />
                 </svg>
                 <span>{error}</span>
+              </div>
+            )}
+
+            {success && (
+              <div
+                className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center"
+                role="alert">
+                <svg
+                  className="h-5 w-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <div>
+                  <p className="font-medium">{success}</p>
+                  <p className="text-sm mt-1">
+                    📧 Check your email inbox and spam folder.
+                  </p>
+                </div>
               </div>
             )}
 

@@ -12,6 +12,7 @@ import {
   FaHome,
   FaProjectDiagram,
 } from "react-icons/fa";
+import NotificationBell from "./NotificationBell";
 
 const Header = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
@@ -97,16 +98,7 @@ const Header = ({ onMenuClick }) => {
             </div>
 
             {/* Notification Bell - only show when user is logged in */}
-            {user && (
-              <div className="relative">
-                <button className="p-1.5 sm:p-2 rounded-full text-blue-200 hover:text-white hover:bg-blue-700/30 focus:outline-none transition-all duration-300 relative backdrop-blur-sm border border-white/10">
-                  <FaBell className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-red-500 to-pink-600 rounded-full flex items-center justify-center text-[8px] sm:text-xs text-white font-bold animate-pulse">
-                    3
-                  </span>
-                </button>
-              </div>
-            )}
+            {user && <NotificationBell />}
 
             {/* User dropdown - show login/register buttons when not logged in */}
             {user ? (

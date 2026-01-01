@@ -22,6 +22,10 @@ import TaskDetailsBeautiful from "./pages/TaskDetailsBeautiful";
 import ProjectDetailsBeautiful from "./pages/ProjectDetailsBeautiful";
 import TimeTrackingBeautiful from "./pages/TimeTrackingBeautiful";
 import TimesheetBeautiful from "./pages/TimesheetBeautiful";
+import NotificationsBeautiful from "./pages/NotificationsBeautiful";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import Calendar from "./pages/Calendar";
@@ -64,6 +68,9 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
           {/* Protected routes - with header and sidebar */}
           <Route
@@ -217,6 +224,14 @@ function App() {
                           element={
                             <ProtectedRoute>
                               <TimesheetBeautiful />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/notifications"
+                          element={
+                            <ProtectedRoute>
+                              <NotificationsBeautiful />
                             </ProtectedRoute>
                           }
                         />
