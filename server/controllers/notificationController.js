@@ -94,7 +94,7 @@ const deleteNotification = asyncHandler(async (req, res) => {
     return res.status(403).json({ success: false, message: "Not authorized" });
   }
 
-  await notification.remove();
+  await Notification.findByIdAndDelete(req.params.id);
 
   res.status(200).json({
     success: true,

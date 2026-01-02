@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import ProfileBeautiful from "./pages/ProfileBeautiful";
 import Teams from "./pages/Teams";
 import TeamsBeautiful from "./pages/TeamsBeautiful";
+import TeamDetailsBeautiful from "./pages/TeamDetailsBeautiful";
 import Projects from "./pages/Projects";
 import ProjectsSimple from "./pages/ProjectsSimple";
 import ProjectsBeautiful from "./pages/ProjectsBeautiful";
@@ -23,6 +24,7 @@ import ProjectDetailsBeautiful from "./pages/ProjectDetailsBeautiful";
 import TimeTrackingBeautiful from "./pages/TimeTrackingBeautiful";
 import TimesheetBeautiful from "./pages/TimesheetBeautiful";
 import NotificationsBeautiful from "./pages/NotificationsBeautiful";
+import MyTasksBeautiful from "./pages/MyTasksBeautiful";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
@@ -140,6 +142,14 @@ function App() {
                           }
                         />
                         <Route
+                          path="/teams/:id"
+                          element={
+                            <ProtectedRoute>
+                              <TeamDetailsBeautiful />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
                           path="/projects"
                           element={
                             <ProtectedRoute>
@@ -176,6 +186,14 @@ function App() {
                           element={
                             <ProtectedRoute>
                               <TasksBeautiful />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/tasks/my"
+                          element={
+                            <ProtectedRoute>
+                              <MyTasksBeautiful />
                             </ProtectedRoute>
                           }
                         />
@@ -347,7 +365,6 @@ function App() {
                             </ProtectedRoute>
                           }
                         />
-
                         {/* Admin routes */}
                         <Route
                           path="/admin"
@@ -381,7 +398,6 @@ function App() {
                             </AdminRoute>
                           }
                         />
-
                         {/* 404 route */}
                         <Route path="*" element={<NotFound />} />
                       </Routes>

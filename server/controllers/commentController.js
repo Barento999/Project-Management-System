@@ -145,7 +145,7 @@ const deleteComment = asyncHandler(async (req, res) => {
     return res.status(403).json({ success: false, message: "Not authorized" });
   }
 
-  await comment.remove();
+  await Comment.findByIdAndDelete(req.params.id);
 
   res.status(200).json({
     success: true,

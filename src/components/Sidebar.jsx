@@ -78,6 +78,13 @@ const Sidebar = ({ onClose }) => {
       badgeColor: "bg-purple-500",
     },
     {
+      name: "My Tasks",
+      path: "/tasks/my",
+      icon: <FaClipboardList />,
+      badge: "📋 NEW",
+      badgeColor: "bg-gradient-to-r from-purple-500 to-pink-500",
+    },
+    {
       name: "Time Tracking",
       path: "/time-tracking",
       icon: <FaClock />,

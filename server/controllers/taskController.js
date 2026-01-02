@@ -1,19 +1,20 @@
-const asyncHandler = require('express-async-handler');
-const Task = require('../models/Task');
-const Project = require('../models/Project');
-const User = require('../models/User');
+const asyncHandler = require("express-async-handler");
+const Task = require("../models/Task");
+const Project = require("../models/Project");
+const User = require("../models/User");
 
 // @desc    Create a new task
 // @route   POST /api/tasks
 // @access  Private
 const createTask = asyncHandler(async (req, res) => {
-  const { title, description, projectId, assignedTo, dueDate, priority, tags } = req.body;
+  const { title, description, projectId, assignedTo, dueDate, priority, tags } =
+    req.body;
 
   // Validation
   if (!title || !projectId) {
     return res.status(400).json({
       success: false,
-      message: 'Please provide task title and project ID'
+      message: "Please provide task title and project ID",
     });
   }
 
@@ -22,7 +23,7 @@ const createTask = asyncHandler(async (req, res) => {
   if (!project) {
     return res.status(404).json({
       success: false,
-      message: 'Project not found'
+      message: "Project not found",
     });
   }
 
@@ -30,11 +31,16 @@ const createTask = asyncHandler(async (req, res) => {
   const isProjectOwner = project.owner.toString() === req.user._id.toString();
   const isProjectMember = project.members.includes(req.user._id);
   const isTeamMember = false; // We'll check team access separately if needed
-  
-  if (req.user.role !== 'ADMIN' && !isProjectOwner && !isProjectMember && !isTeamMember) {
+
+  if (
+    req.user.role !== "ADMIN" &&
+    !isProjectOwner &&
+    !isProjectMember &&
+    !isTeamMember
+  ) {
     return res.status(403).json({
       success: false,
-      message: 'Access denied to this project'
+      message: "Access denied to this project",
     });
   }
 
@@ -45,7 +51,7 @@ const createTask = asyncHandler(async (req, res) => {
     if (!assignedUser) {
       return res.status(404).json({
         success: false,
-        message: 'Assigned user not found'
+        message: "Assigned user not found",
       });
     }
   }
@@ -59,12 +65,12 @@ const createTask = asyncHandler(async (req, res) => {
     createdBy: req.user._id,
     dueDate,
     priority,
-    tags
+    tags,
   });
 
   res.status(201).json({
     success: true,
-    task
+    task,
   });
 });
 
@@ -74,12 +80,12 @@ const createTask = asyncHandler(async (req, res) => {
 const getTasks = asyncHandler(async (req, res) => {
   let tasks;
 
-  if (req.user.role === 'ADMIN') {
+  if (req.user.role === "ADMIN") {
     // Admin can see all tasks
     tasks = await Task.find({})
-      .populate('project', 'name')
-      .populate('assignedTo', 'name email')
-      .populate('createdBy', 'name email')
+      .populate("project", "name")
+      .populate("assignedTo", "name email")
+      .populate("createdBy", "name email")
       .sort({ createdAt: -1 });
   } else {
     // Regular user can see tasks assigned to them or tasks in projects they're part of
@@ -87,24 +93,25 @@ const getTasks = asyncHandler(async (req, res) => {
       $or: [
         { assignedTo: req.user._id },
         { createdBy: req.user._id },
-        { project: { $in: await Project.find({ 
-          $or: [
-            { owner: req.user._id },
-            { members: req.user._id }
-          ]
-        }).select('_id') } }
-      ]
+        {
+          project: {
+            $in: await Project.find({
+              $or: [{ owner: req.user._id }, { members: req.user._id }],
+            }).select("_id"),
+          },
+        },
+      ],
     })
-      .populate('project', 'name')
-      .populate('assignedTo', 'name email')
-      .populate('createdBy', 'name email')
+      .populate("project", "name")
+      .populate("assignedTo", "name email")
+      .populate("createdBy", "name email")
       .sort({ createdAt: -1 });
   }
 
   res.status(200).json({
     success: true,
     count: tasks.length,
-    tasks
+    tasks,
   });
 });
 
@@ -113,34 +120,42 @@ const getTasks = asyncHandler(async (req, res) => {
 // @access  Private
 const getTask = asyncHandler(async (req, res) => {
   const task = await Task.findById(req.params.id)
-    .populate('project', 'name description')
-    .populate('assignedTo', 'name email avatar')
-    .populate('createdBy', 'name email avatar');
+    .populate("project", "name description")
+    .populate("assignedTo", "name email avatar")
+    .populate("createdBy", "name email avatar");
 
   if (!task) {
     return res.status(404).json({
       success: false,
-      message: 'Task not found'
+      message: "Task not found",
     });
   }
 
   // Check if user has access to this task
   const project = await Project.findById(task.project);
-  const isAssigned = task.assignedTo && task.assignedTo.toString() === req.user._id.toString();
+  const isAssigned =
+    task.assignedTo && task.assignedTo.toString() === req.user._id.toString();
   const isCreator = task.createdBy.toString() === req.user._id.toString();
-  const isProjectOwner = project && project.owner.toString() === req.user._id.toString();
+  const isProjectOwner =
+    project && project.owner.toString() === req.user._id.toString();
   const isProjectMember = project && project.members.includes(req.user._id);
-  
-  if (req.user.role !== 'ADMIN' && !isAssigned && !isCreator && !isProjectOwner && !isProjectMember) {
+
+  if (
+    req.user.role !== "ADMIN" &&
+    !isAssigned &&
+    !isCreator &&
+    !isProjectOwner &&
+    !isProjectMember
+  ) {
     return res.status(403).json({
       success: false,
-      message: 'Access denied to this task'
+      message: "Access denied to this task",
     });
   }
 
   res.status(200).json({
     success: true,
-    task
+    task,
   });
 });
 
@@ -153,21 +168,29 @@ const updateTask = asyncHandler(async (req, res) => {
   if (!task) {
     return res.status(404).json({
       success: false,
-      message: 'Task not found'
+      message: "Task not found",
     });
   }
 
   // Check if user has permission to update (assigned user, creator, project owner, or admin)
   const project = await Project.findById(task.project);
-  const isAssigned = task.assignedTo && task.assignedTo.toString() === req.user._id.toString();
+  const isAssigned =
+    task.assignedTo && task.assignedTo.toString() === req.user._id.toString();
   const isCreator = task.createdBy.toString() === req.user._id.toString();
-  const isProjectOwner = project && project.owner.toString() === req.user._id.toString();
+  const isProjectOwner =
+    project && project.owner.toString() === req.user._id.toString();
   const isProjectMember = project && project.members.includes(req.user._id);
-  
-  if (req.user.role !== 'ADMIN' && !isAssigned && !isCreator && !isProjectOwner && !isProjectMember) {
+
+  if (
+    req.user.role !== "ADMIN" &&
+    !isAssigned &&
+    !isCreator &&
+    !isProjectOwner &&
+    !isProjectMember
+  ) {
     return res.status(403).json({
       success: false,
-      message: 'Access denied to update this task'
+      message: "Access denied to update this task",
     });
   }
 
@@ -186,7 +209,7 @@ const updateTask = asyncHandler(async (req, res) => {
       if (!assignedUser) {
         return res.status(404).json({
           success: false,
-          message: 'Assigned user not found'
+          message: "Assigned user not found",
         });
       }
       task.assignedTo = req.body.assignedTo;
@@ -196,9 +219,9 @@ const updateTask = asyncHandler(async (req, res) => {
   }
 
   // Update completedAt if status changes to 'done'
-  if (req.body.status === 'done' && task.status !== 'done') {
+  if (req.body.status === "done" && task.status !== "done") {
     task.completedAt = Date.now();
-  } else if (req.body.status !== 'done' && task.status === 'done') {
+  } else if (req.body.status !== "done" && task.status === "done") {
     task.completedAt = null; // Reset if task is moved back from done
   }
 
@@ -206,7 +229,7 @@ const updateTask = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    task: updatedTask
+    task: updatedTask,
   });
 });
 
@@ -219,27 +242,28 @@ const deleteTask = asyncHandler(async (req, res) => {
   if (!task) {
     return res.status(404).json({
       success: false,
-      message: 'Task not found'
+      message: "Task not found",
     });
   }
 
   // Check if user has permission to delete (creator, project owner, or admin)
   const project = await Project.findById(task.project);
   const isCreator = task.createdBy.toString() === req.user._id.toString();
-  const isProjectOwner = project && project.owner.toString() === req.user._id.toString();
-  
-  if (req.user.role !== 'ADMIN' && !isCreator && !isProjectOwner) {
+  const isProjectOwner =
+    project && project.owner.toString() === req.user._id.toString();
+
+  if (req.user.role !== "ADMIN" && !isCreator && !isProjectOwner) {
     return res.status(403).json({
       success: false,
-      message: 'Access denied to delete this task'
+      message: "Access denied to delete this task",
     });
   }
 
-  await task.remove();
+  await Task.findByIdAndDelete(req.params.id);
 
   res.status(200).json({
     success: true,
-    message: 'Task deleted successfully'
+    message: "Task deleted successfully",
   });
 });
 
@@ -248,34 +272,34 @@ const deleteTask = asyncHandler(async (req, res) => {
 // @access  Private
 const getTasksByProject = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.projectId);
-  
+
   if (!project) {
     return res.status(404).json({
       success: false,
-      message: 'Project not found'
+      message: "Project not found",
     });
   }
 
   // Check if user has access to this project
   const isProjectOwner = project.owner.toString() === req.user._id.toString();
   const isProjectMember = project.members.includes(req.user._id);
-  
-  if (req.user.role !== 'ADMIN' && !isProjectOwner && !isProjectMember) {
+
+  if (req.user.role !== "ADMIN" && !isProjectOwner && !isProjectMember) {
     return res.status(403).json({
       success: false,
-      message: 'Access denied to this project'
+      message: "Access denied to this project",
     });
   }
 
   const tasks = await Task.find({ project: req.params.projectId })
-    .populate('assignedTo', 'name email avatar')
-    .populate('createdBy', 'name email avatar')
+    .populate("assignedTo", "name email avatar")
+    .populate("createdBy", "name email avatar")
     .sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,
     count: tasks.length,
-    tasks
+    tasks,
   });
 });
 
@@ -284,39 +308,36 @@ const getTasksByProject = asyncHandler(async (req, res) => {
 // @access  Private
 const getTasksByStatus = asyncHandler(async (req, res) => {
   const { status } = req.params;
-  
+
   // Validate status
-  const validStatuses = ['todo', 'in-progress', 'done'];
+  const validStatuses = ["todo", "in-progress", "done"];
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
       success: false,
-      message: 'Invalid status. Valid statuses are: todo, in-progress, done'
+      message: "Invalid status. Valid statuses are: todo, in-progress, done",
     });
   }
 
   // Find tasks by status for projects the user has access to
   const accessibleProjects = await Project.find({
-    $or: [
-      { owner: req.user._id },
-      { members: req.user._id }
-    ]
-  }).select('_id');
+    $or: [{ owner: req.user._id }, { members: req.user._id }],
+  }).select("_id");
 
-  const projectIds = accessibleProjects.map(project => project._id);
+  const projectIds = accessibleProjects.map((project) => project._id);
 
   const tasks = await Task.find({
     status,
-    project: { $in: projectIds }
+    project: { $in: projectIds },
   })
-    .populate('project', 'name')
-    .populate('assignedTo', 'name email avatar')
-    .populate('createdBy', 'name email avatar')
+    .populate("project", "name")
+    .populate("assignedTo", "name email avatar")
+    .populate("createdBy", "name email avatar")
     .sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,
     count: tasks.length,
-    tasks
+    tasks,
   });
 });
 
@@ -327,5 +348,5 @@ module.exports = {
   updateTask,
   deleteTask,
   getTasksByProject,
-  getTasksByStatus
+  getTasksByStatus,
 };

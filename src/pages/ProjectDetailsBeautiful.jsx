@@ -11,6 +11,10 @@ import {
 import { projectAPI } from "../services/api";
 import CommentsSection from "../components/CommentsSection";
 import ActivityFeed from "../components/ActivityFeed";
+import FileUpload from "../components/FileUpload";
+import FileList from "../components/FileList";
+import WorkloadDistribution from "../components/WorkloadDistribution";
+import ProjectMemberManagement from "../components/ProjectMemberManagement";
 
 const ProjectDetailsBeautiful = () => {
   const { id } = useParams();
@@ -18,9 +22,11 @@ const ProjectDetailsBeautiful = () => {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("comments");
+  const [fileRefresh, setFileRefresh] = useState(0);
 
   useEffect(() => {
     fetchProject();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchProject = async () => {
@@ -183,6 +189,33 @@ const ProjectDetailsBeautiful = () => {
               }`}>
               📊 Activity
             </button>
+            <button
+              onClick={() => setActiveTab("files")}
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all ${
+                activeTab === "files"
+                  ? "bg-gradient-to-r from-green-600 to-teal-600 text-white shadow-lg"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}>
+              📎 Files
+            </button>
+            <button
+              onClick={() => setActiveTab("workload")}
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all ${
+                activeTab === "workload"
+                  ? "bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-lg"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}>
+              📊 Workload
+            </button>
+            <button
+              onClick={() => setActiveTab("members")}
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all ${
+                activeTab === "members"
+                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}>
+              👥 Members
+            </button>
           </div>
         </div>
 
@@ -194,8 +227,33 @@ const ProjectDetailsBeautiful = () => {
               entityId={project._id}
               entityName={project.name}
             />
-          ) : (
+          ) : activeTab === "activity" ? (
             <ActivityFeed entityType="Project" entityId={project._id} />
+          ) : activeTab === "files" ? (
+            <div className="space-y-6">
+              <FileUpload
+                entityType="project"
+                entityId={project._id}
+                onUploadSuccess={() => setFileRefresh((prev) => prev + 1)}
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Attached Files
+                </h3>
+                <FileList
+                  entityType="project"
+                  entityId={project._id}
+                  refreshTrigger={fileRefresh}
+                />
+              </div>
+            </div>
+          ) : activeTab === "workload" ? (
+            <WorkloadDistribution projectId={project._id} />
+          ) : (
+            <ProjectMemberManagement
+              project={project}
+              onUpdate={fetchProject}
+            />
           )}
         </div>
       </div>

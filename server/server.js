@@ -17,6 +17,7 @@ const commentRoutes = require("./routes/comments");
 const notificationRoutes = require("./routes/notifications");
 const activityLogRoutes = require("./routes/activityLogs");
 const timeTrackingRoutes = require("./routes/timeTracking");
+const fileRoutes = require("./routes/files");
 
 // Import error handler middleware
 const { errorHandler } = require("./middleware/errorHandler");
@@ -27,6 +28,9 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded files
+app.use("/uploads", express.static("uploads"));
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -39,6 +43,7 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activity-logs", activityLogRoutes);
 app.use("/api/time-tracking", timeTrackingRoutes);
+app.use("/api/files", fileRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

@@ -155,6 +155,34 @@ const getMyTasks = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Search users (for team/project management)
+// @route   GET /api/users/search
+// @access  Private
+const searchUsers = asyncHandler(async (req, res) => {
+  const { query } = req.query;
+
+  // Build search criteria
+  let searchCriteria = { isActive: true };
+
+  if (query) {
+    searchCriteria.$or = [
+      { name: { $regex: query, $options: "i" } },
+      { email: { $regex: query, $options: "i" } },
+    ];
+  }
+
+  const users = await User.find(searchCriteria)
+    .select("name email role avatar")
+    .limit(50)
+    .sort({ name: 1 });
+
+  res.status(200).json({
+    success: true,
+    count: users.length,
+    users,
+  });
+});
+
 module.exports = {
   getUsers,
   getUser,
@@ -163,4 +191,5 @@ module.exports = {
   getMyTeams,
   getMyProjects,
   getMyTasks,
+  searchUsers,
 };

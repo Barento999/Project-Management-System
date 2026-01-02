@@ -8,10 +8,14 @@ import {
   FaCalendar,
   FaFlag,
   FaProjectDiagram,
+  FaUserPlus,
 } from "react-icons/fa";
 import { taskAPI } from "../services/api";
 import CommentsSection from "../components/CommentsSection";
 import ActivityFeed from "../components/ActivityFeed";
+import FileUpload from "../components/FileUpload";
+import FileList from "../components/FileList";
+import TaskAssignment from "../components/TaskAssignment";
 
 const TaskDetailsBeautiful = () => {
   const { id } = useParams();
@@ -19,9 +23,12 @@ const TaskDetailsBeautiful = () => {
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("comments");
+  const [fileRefresh, setFileRefresh] = useState(0);
+  const [showAssignModal, setShowAssignModal] = useState(false);
 
   useEffect(() => {
     fetchTask();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchTask = async () => {
@@ -55,6 +62,16 @@ const TaskDetailsBeautiful = () => {
       done: "bg-green-100 text-green-700 border-green-300",
     };
     return colors[status] || colors.todo;
+  };
+
+  const handleAssignTask = async (userId) => {
+    try {
+      await taskAPI.update(id, { assignedTo: userId });
+      await fetchTask(); // Refresh task data
+    } catch (error) {
+      console.error("Failed to assign task:", error);
+      throw error;
+    }
   };
 
   if (loading) {
@@ -128,14 +145,17 @@ const TaskDetailsBeautiful = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
+            <div
+              className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => setShowAssignModal(true)}>
               <FaUser className="text-purple-600 text-xl" />
-              <div>
+              <div className="flex-1">
                 <p className="text-xs text-gray-600">Assigned To</p>
                 <p className="font-semibold text-gray-800">
                   {task.assignedTo?.name || "Unassigned"}
                 </p>
               </div>
+              <FaUserPlus className="text-purple-600 text-lg" />
             </div>
             <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl">
               <FaCalendar className="text-green-600 text-xl" />
@@ -181,6 +201,15 @@ const TaskDetailsBeautiful = () => {
               }`}>
               📊 Activity
             </button>
+            <button
+              onClick={() => setActiveTab("files")}
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all ${
+                activeTab === "files"
+                  ? "bg-gradient-to-r from-green-600 to-teal-600 text-white shadow-lg"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}>
+              📎 Files
+            </button>
           </div>
         </div>
 
@@ -192,11 +221,38 @@ const TaskDetailsBeautiful = () => {
               entityId={task._id}
               entityName={task.title}
             />
-          ) : (
+          ) : activeTab === "activity" ? (
             <ActivityFeed entityType="Task" entityId={task._id} />
+          ) : (
+            <div className="space-y-6">
+              <FileUpload
+                entityType="task"
+                entityId={task._id}
+                onUploadSuccess={() => setFileRefresh((prev) => prev + 1)}
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Attached Files
+                </h3>
+                <FileList
+                  entityType="task"
+                  entityId={task._id}
+                  refreshTrigger={fileRefresh}
+                />
+              </div>
+            </div>
           )}
         </div>
       </div>
+
+      {/* Task Assignment Modal */}
+      {showAssignModal && (
+        <TaskAssignment
+          task={task}
+          onAssign={handleAssignTask}
+          onClose={() => setShowAssignModal(false)}
+        />
+      )}
 
       <style>{`
         @keyframes blob {

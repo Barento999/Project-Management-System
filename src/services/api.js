@@ -56,8 +56,9 @@ export const projectAPI = {
   update: (id, data) => API.put(`/projects/${id}`, data),
   delete: (id) => API.delete(`/projects/${id}`),
   addMember: (id, userId, role) =>
-    API.post(`/projects/${id}/members`, { userId, role }),
-  removeMember: (id, userId) => API.delete(`/projects/${id}/members/${userId}`),
+    API.put(`/projects/${id}/add-member`, { userId, role }),
+  removeMember: (id, userId) =>
+    API.put(`/projects/${id}/remove-member`, { userId }),
   archive: (id) => API.put(`/projects/${id}/archive`),
   getStats: (id) => API.get(`/projects/${id}/stats`),
 };
@@ -81,14 +82,15 @@ export const teamAPI = {
   create: (data) => API.post("/teams", data),
   update: (id, data) => API.put(`/teams/${id}`, data),
   delete: (id) => API.delete(`/teams/${id}`),
-  addMember: (id, userId, role) =>
-    API.post(`/teams/${id}/members`, { userId, role }),
-  removeMember: (id, userId) => API.delete(`/teams/${id}/members/${userId}`),
+  addMember: (id, userId) => API.put(`/teams/${id}/add-member`, { userId }),
+  removeMember: (id, userId) =>
+    API.put(`/teams/${id}/remove-member`, { userId }),
 };
 
 // User API
 export const userAPI = {
   getAll: (params) => API.get("/users", { params }),
+  search: (query) => API.get("/users/search", { params: { query } }),
   getOne: (id) => API.get(`/users/${id}`),
   update: (id, data) => API.put(`/users/${id}`, data),
   delete: (id) => API.delete(`/users/${id}`),
@@ -131,6 +133,21 @@ export const activityLogAPI = {
   getAll: (params) => API.get("/activity-logs", { params }),
   getByEntity: (entityType, entityId, params) =>
     API.get(`/activity-logs/${entityType}/${entityId}`, { params }),
+};
+
+// File API
+export const fileAPI = {
+  upload: (formData) =>
+    API.post("/files/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }),
+  getAll: (params) => API.get("/files", { params }),
+  getByEntity: (entityType, entityId) =>
+    API.get(`/files/entity/${entityType}/${entityId}`),
+  getOne: (id) => API.get(`/files/${id}`),
+  download: (id) => API.get(`/files/${id}/download`, { responseType: "blob" }),
+  update: (id, data) => API.put(`/files/${id}`, data),
+  delete: (id) => API.delete(`/files/${id}`),
 };
 
 // Admin API
