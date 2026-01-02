@@ -78,7 +78,7 @@ const ProfileBeautiful = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-8">
+    <div className="min-h-screen p-8" style={{ backgroundColor: "#F5F7FB" }}>
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
@@ -89,7 +89,7 @@ const ProfileBeautiful = () => {
       <div className="relative z-10 max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-4 animate-fade-in">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4 animate-fade-in">
             My Profile
           </h1>
           <p className="text-gray-600 text-lg">
@@ -284,9 +284,7 @@ const ProfileBeautiful = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">Projects</p>
-                <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  12
-                </p>
+                <p className="text-3xl font-bold text-gray-900">12</p>
               </div>
             </div>
           </div>
@@ -298,9 +296,7 @@ const ProfileBeautiful = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">Teams</p>
-                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  5
-                </p>
+                <p className="text-3xl font-bold text-gray-900">5</p>
               </div>
             </div>
           </div>
@@ -312,9 +308,7 @@ const ProfileBeautiful = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">Tasks Done</p>
-                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  48
-                </p>
+                <p className="text-3xl font-bold text-gray-900">48</p>
               </div>
             </div>
           </div>

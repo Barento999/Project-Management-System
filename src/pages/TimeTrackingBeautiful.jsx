@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   FaClock,
   FaPlay,
@@ -18,7 +18,7 @@ const TimeTrackingBeautiful = () => {
   const [loading, setLoading] = useState(true);
   const [showManualForm, setShowManualForm] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [filter, setFilter] = useState({
+  const [filter] = useState({
     startDate: "",
     endDate: "",
     taskId: "",
@@ -39,24 +39,7 @@ const TimeTrackingBeautiful = () => {
     description: "",
   });
 
-  useEffect(() => {
-    fetchData();
-  }, [filter]);
-
-  useEffect(() => {
-    let interval;
-    if (runningTimer) {
-      interval = setInterval(() => {
-        const start = new Date(runningTimer.startTime);
-        const now = new Date();
-        const diff = Math.floor((now - start) / 1000);
-        setElapsedTime(diff);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [runningTimer]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const [runningRes, entriesRes, tasksRes] = await Promise.all([
@@ -79,7 +62,24 @@ const TimeTrackingBeautiful = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    let interval;
+    if (runningTimer) {
+      interval = setInterval(() => {
+        const start = new Date(runningTimer.startTime);
+        const now = new Date();
+        const diff = Math.floor((now - start) / 1000);
+        setElapsedTime(diff);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [runningTimer]);
 
   const startTimer = async () => {
     if (!timerForm.taskId) {
@@ -169,36 +169,29 @@ const TimeTrackingBeautiful = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <FaClock className="w-16 h-16 text-indigo-600 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading time tracking...</p>
+          <FaClock className="w-16 h-16 text-blue-600 animate-spin mx-auto mb-4" />
+          <p className="text-gray-500">Loading time tracking...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 md:p-8">
-      {/* Animated Background Blobs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
-
-      <div className="relative max-w-7xl mx-auto">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
             ⏱️ Time Tracking
           </h1>
-          <p className="text-gray-600">Track your time and manage timesheets</p>
+          <p className="text-gray-500">Track your time and manage timesheets</p>
         </div>
 
         {/* Running Timer Card */}
         {runningTimer ? (
-          <div className="mb-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-8 shadow-2xl text-white">
+          <div className="mb-8 bg-green-600 rounded-3xl p-8 shadow-2xl text-white">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
@@ -218,15 +211,15 @@ const TimeTrackingBeautiful = () => {
                 </div>
                 <button
                   onClick={stopTimer}
-                  className="bg-white text-red-600 px-8 py-3 rounded-xl font-semibold hover:bg-red-50 transition-all transform hover:scale-105 flex items-center gap-2 mx-auto">
+                  className="bg-white text-red-600 border-2 border-red-600 px-8 py-3 rounded-xl font-semibold hover:bg-red-50 transition-all flex items-center gap-2 mx-auto">
                   <FaStop /> Stop Timer
                 </button>
               </div>
             </div>
           </div>
         ) : (
-          <div className="mb-8 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-white/50">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <div className="mb-8 bg-white rounded-3xl p-8 shadow-xl border border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <FaPlay className="text-blue-600" /> Start Timer
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -235,7 +228,7 @@ const TimeTrackingBeautiful = () => {
                 onChange={(e) =>
                   setTimerForm({ ...timerForm, taskId: e.target.value })
                 }
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all">
+                className="px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none transition-all">
                 <option value="">Select Task</option>
                 {tasks.map((task) => (
                   <option key={task._id} value={task._id}>
@@ -250,11 +243,11 @@ const TimeTrackingBeautiful = () => {
                 onChange={(e) =>
                   setTimerForm({ ...timerForm, description: e.target.value })
                 }
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                className="px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none transition-all"
               />
               <button
                 onClick={startTimer}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
                 <FaPlay /> Start Timer
               </button>
             </div>
@@ -263,10 +256,10 @@ const TimeTrackingBeautiful = () => {
 
         {/* Stats and Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/50">
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Total Hours</p>
+                <p className="text-gray-500 text-sm">Total Hours</p>
                 <p className="text-3xl font-bold text-blue-600">
                   {totalHours.toFixed(1)}h
                 </p>
@@ -274,20 +267,20 @@ const TimeTrackingBeautiful = () => {
               <FaClock className="w-12 h-12 text-blue-600 opacity-20" />
             </div>
           </div>
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/50">
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Entries</p>
-                <p className="text-3xl font-bold text-indigo-600">
+                <p className="text-gray-500 text-sm">Entries</p>
+                <p className="text-3xl font-bold text-blue-600">
                   {timeEntries.length}
                 </p>
               </div>
-              <FaCalendar className="w-12 h-12 text-indigo-600 opacity-20" />
+              <FaCalendar className="w-12 h-12 text-blue-600 opacity-20" />
             </div>
           </div>
           <button
             onClick={() => setShowManualForm(!showManualForm)}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center justify-center gap-3 font-semibold">
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 font-semibold">
             <FaPlus className="w-6 h-6" />
             Add Manual Entry
           </button>
@@ -295,8 +288,8 @@ const TimeTrackingBeautiful = () => {
 
         {/* Manual Entry Form */}
         {showManualForm && (
-          <div className="mb-8 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-white/50 animate-slide-down">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <div className="mb-8 bg-white rounded-3xl p-8 shadow-xl border border-gray-200 animate-slide-down">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Add Manual Time Entry
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -305,7 +298,7 @@ const TimeTrackingBeautiful = () => {
                 onChange={(e) =>
                   setManualEntry({ ...manualEntry, taskId: e.target.value })
                 }
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all">
+                className="px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none transition-all">
                 <option value="">Select Task *</option>
                 {tasks.map((task) => (
                   <option key={task._id} value={task._id}>
@@ -320,7 +313,7 @@ const TimeTrackingBeautiful = () => {
                 onChange={(e) =>
                   setManualEntry({ ...manualEntry, duration: e.target.value })
                 }
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+                className="px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none transition-all"
               />
             </div>
             <textarea
@@ -329,13 +322,13 @@ const TimeTrackingBeautiful = () => {
               onChange={(e) =>
                 setManualEntry({ ...manualEntry, description: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all mb-4"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none transition-all mb-4"
               rows="3"
             />
             <div className="flex gap-3">
               <button
                 onClick={createManualEntry}
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all">
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
                 Create Entry
               </button>
               <button
@@ -348,9 +341,9 @@ const TimeTrackingBeautiful = () => {
         )}
 
         {/* Time Entries List */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-white/50">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <FaChartBar className="text-indigo-600" /> Time Entries
+        <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <FaChartBar className="text-blue-600" /> Time Entries
           </h2>
 
           {timeEntries.length === 0 ? (
@@ -364,13 +357,13 @@ const TimeTrackingBeautiful = () => {
               {timeEntries.map((entry) => (
                 <div
                   key={entry._id}
-                  className="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border-l-4 border-indigo-500 hover:shadow-lg transition-all">
+                  className="bg-gray-50 rounded-2xl p-6 border-l-4 border-blue-600 hover:shadow-lg transition-all">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
-                      <h3 className="font-bold text-lg text-gray-800">
+                      <h3 className="font-bold text-lg text-gray-900">
                         {entry.task?.title}
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-500">
                         {entry.project?.name}
                       </p>
                       {entry.description && (
@@ -384,13 +377,13 @@ const TimeTrackingBeautiful = () => {
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="text-2xl font-bold text-indigo-600">
+                        <p className="text-2xl font-bold text-blue-600">
                           {formatDuration(entry.duration)}
                         </p>
                       </div>
                       <button
                         onClick={() => deleteEntry(entry._id)}
-                        className="p-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all">
+                        className="p-3 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all">
                         <FaTrash />
                       </button>
                     </div>
@@ -403,20 +396,6 @@ const TimeTrackingBeautiful = () => {
       </div>
 
       <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
         @keyframes slide-down {
           from {
             opacity: 0;

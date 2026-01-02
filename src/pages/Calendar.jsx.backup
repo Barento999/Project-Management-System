@@ -3,20 +3,24 @@ import { useNavigate } from "react-router-dom";
 import {
   FaCalendar,
   FaPlus,
+  FaChevronLeft,
+  FaChevronRight,
   FaClock,
   FaMapMarkerAlt,
   FaTimes,
-  FaCheckCircle,
   FaUsers,
 } from "react-icons/fa";
 import { calendarAPI } from "../utils/api";
 
-const CalendarSchedule = () => {
+const Calendar = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [showEventModal, setShowEventModal] = useState(false);
   const [currentEvent, setCurrentEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedDayEvents, setSelectedDayEvents] = useState([]);
+  const [showDayView, setShowDayView] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -28,7 +32,7 @@ const CalendarSchedule = () => {
       setEvents(response.data.events || []);
     } catch (error) {
       console.error("Error fetching events:", error);
-      setEvents([]);
+      setEvents([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -38,10 +42,10 @@ const CalendarSchedule = () => {
     setCurrentEvent({
       title: "",
       description: "",
-      date: new Date().toISOString().split("T")[0],
+      date: selectedDate.toISOString().split("T")[0],
       startTime: "09:00",
       endTime: "10:00",
-      location: "",
+      attendees: [],
     });
     setShowEventModal(true);
   };
@@ -61,17 +65,85 @@ const CalendarSchedule = () => {
     }
   };
 
-  const getTodayEvents = () => {
-    const today = new Date().toISOString().split("T")[0];
-    return events.filter((e) => e.date === today);
+  const handleDayClick = (day) => {
+    if (day.events.length > 0) {
+      setSelectedDayEvents(day.events);
+      setShowDayView(true);
+    }
   };
 
-  const getUpcomingEvents = () => {
-    const today = new Date();
-    return events
-      .filter((e) => new Date(e.date) > today)
-      .sort((a, b) => new Date(a.date) - new Date(b.date))
-      .slice(0, 5);
+  const renderCalendar = () => {
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+    const days = [];
+    const currentDay = new Date(startDate);
+
+    for (let i = 0; i < 42; i++) {
+      const dayEvents = events.filter((event) => {
+        const eventDate = new Date(event.date);
+        return (
+          eventDate.getDate() === currentDay.getDate() &&
+          eventDate.getMonth() === currentDay.getMonth() &&
+          eventDate.getFullYear() === currentDay.getFullYear()
+        );
+      });
+
+      days.push({
+        date: new Date(currentDay),
+        isCurrentMonth: currentDay.getMonth() === month,
+        events: dayEvents,
+      });
+
+      currentDay.setDate(currentDay.getDate() + 1);
+    }
+
+    return (
+      <div className="grid grid-cols-7 gap-1">
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+          <div
+            key={day}
+            className="text-center font-semibold py-3 text-gray-900 bg-gray-50 border-b-2 border-gray-200">
+            {day}
+          </div>
+        ))}
+        {days.map((day, index) => (
+          <div
+            key={index}
+            onClick={() => handleDayClick(day)}
+            className={`min-h-28 p-2 border border-gray-200 rounded-lg transition-all cursor-pointer ${
+              day.isCurrentMonth
+                ? "bg-white hover:bg-blue-50"
+                : "bg-gray-50 text-gray-400"
+            } ${
+              day.date.toDateString() === new Date().toDateString()
+                ? "ring-2 ring-blue-600 bg-blue-50"
+                : ""
+            }`}>
+            <div className="text-right font-semibold text-sm mb-1">
+              {day.date.getDate()}
+            </div>
+            <div className="space-y-1 max-h-16 overflow-y-auto">
+              {day.events.slice(0, 2).map((event, idx) => (
+                <div
+                  key={idx}
+                  className="text-xs bg-blue-600 text-white px-2 py-1 rounded truncate">
+                  {event.title}
+                </div>
+              ))}
+              {day.events.length > 2 && (
+                <div className="text-xs text-blue-600 font-semibold">
+                  +{day.events.length - 2} more
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   if (loading) {
@@ -79,7 +151,7 @@ const CalendarSchedule = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <FaCalendar className="w-16 h-16 text-blue-600 animate-spin mx-auto mb-4" />
-          <p className="text-gray-500">Loading schedule...</p>
+          <p className="text-gray-500">Loading calendar...</p>
         </div>
       </div>
     );
@@ -94,24 +166,22 @@ const CalendarSchedule = () => {
             <div>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
                 <FaCalendar className="text-blue-600" />
-                Schedule
+                Calendar
               </h1>
               <p className="text-gray-500 mt-1">
-                Manage your appointments and events
+                Manage your schedule and events
               </p>
             </div>
             <button
               onClick={handleCreateEvent}
               className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 font-semibold">
-              <FaPlus /> Add Event
+              <FaPlus /> New Event
             </button>
           </div>
 
           {/* Tabs */}
           <div className="flex gap-2 border-t border-gray-200 pt-4">
-            <button
-              onClick={() => navigate("/calendar")}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-semibold flex items-center gap-2">
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold flex items-center gap-2">
               <FaCalendar /> My Calendar
             </button>
             <button
@@ -119,161 +189,58 @@ const CalendarSchedule = () => {
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-semibold flex items-center gap-2">
               <FaUsers /> Team Calendar
             </button>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold flex items-center gap-2">
+            <button
+              onClick={() => navigate("/calendar/schedule")}
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-semibold flex items-center gap-2">
               <FaClock /> Schedule
             </button>
           </div>
         </div>
 
-        {/* Schedule Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Today's Schedule */}
-          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaClock className="text-blue-600" />
-              Today's Schedule
-            </h3>
-            <div className="space-y-3">
-              {getTodayEvents().length > 0 ? (
-                getTodayEvents().map((event, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition-all">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="font-semibold text-gray-900">
-                        {event.title}
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        {event.startTime}
-                      </span>
-                    </div>
-                    {event.location && (
-                      <p className="text-sm text-gray-500 flex items-center gap-1">
-                        <FaMapMarkerAlt className="text-blue-600" />
-                        {event.location}
-                      </p>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <FaCheckCircle className="w-12 h-12 text-green-600 mx-auto mb-2" />
-                  <p className="text-gray-500">No events today</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Upcoming Events */}
-          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaCalendar className="text-blue-600" />
-              Upcoming Events
-            </h3>
-            <div className="space-y-3">
-              {getUpcomingEvents().length > 0 ? (
-                getUpcomingEvents().map((event, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition-all">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="font-semibold text-gray-900">
-                        {event.title}
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        {new Date(event.date).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </div>
-                    {event.location && (
-                      <p className="text-sm text-gray-500 flex items-center gap-1">
-                        <FaMapMarkerAlt className="text-blue-600" />
-                        {event.location}
-                      </p>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <FaCalendar className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500">No upcoming events</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Quick Add Event */}
-          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaPlus className="text-blue-600" />
-              Quick Add
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Event Title
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none"
-                  placeholder="Enter event title"
-                  value={currentEvent?.title || ""}
-                  onChange={(e) =>
-                    setCurrentEvent({
-                      ...currentEvent,
-                      title: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Date & Time
-                </label>
-                <input
-                  type="datetime-local"
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none"
-                  value={
-                    currentEvent?.date && currentEvent?.startTime
-                      ? `${currentEvent.date}T${currentEvent.startTime}`
-                      : ""
-                  }
-                  onChange={(e) => {
-                    const [date, time] = e.target.value.split("T");
-                    setCurrentEvent({
-                      ...currentEvent,
-                      date,
-                      startTime: time,
-                    });
-                  }}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none"
-                  placeholder="Enter location"
-                  value={currentEvent?.location || ""}
-                  onChange={(e) =>
-                    setCurrentEvent({
-                      ...currentEvent,
-                      location: e.target.value,
-                    })
-                  }
-                />
-              </div>
+        {/* Calendar */}
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">
+              {selectedDate.toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })}
+            </h2>
+            <div className="flex gap-2">
               <button
-                onClick={handleCreateEvent}
-                className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold">
-                Add Event
+                onClick={() =>
+                  setSelectedDate(
+                    new Date(
+                      selectedDate.getFullYear(),
+                      selectedDate.getMonth() - 1,
+                      1
+                    )
+                  )
+                }
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all flex items-center gap-2">
+                <FaChevronLeft /> Prev
+              </button>
+              <button
+                onClick={() => setSelectedDate(new Date())}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold">
+                Today
+              </button>
+              <button
+                onClick={() =>
+                  setSelectedDate(
+                    new Date(
+                      selectedDate.getFullYear(),
+                      selectedDate.getMonth() + 1,
+                      1
+                    )
+                  )
+                }
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all flex items-center gap-2">
+                Next <FaChevronRight />
               </button>
             </div>
           </div>
+          {renderCalendar()}
         </div>
 
         {/* Event Stats */}
@@ -292,9 +259,17 @@ const CalendarSchedule = () => {
           <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm">Today</p>
+                <p className="text-gray-500 text-sm">This Month</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {getTodayEvents().length}
+                  {
+                    events.filter((e) => {
+                      const d = new Date(e.date);
+                      return (
+                        d.getMonth() === selectedDate.getMonth() &&
+                        d.getFullYear() === selectedDate.getFullYear()
+                      );
+                    }).length
+                  }
                 </p>
               </div>
               <FaClock className="text-4xl text-green-600 opacity-20" />
@@ -305,7 +280,9 @@ const CalendarSchedule = () => {
               <div>
                 <p className="text-gray-500 text-sm">Upcoming</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {getUpcomingEvents().length}
+                  {
+                    events.filter((e) => new Date(e.date) > new Date()).length
+                  }
                 </p>
               </div>
               <FaMapMarkerAlt className="text-4xl text-amber-500 opacity-20" />
@@ -313,6 +290,41 @@ const CalendarSchedule = () => {
           </div>
         </div>
       </div>
+
+      {/* Day View Modal */}
+      {showDayView && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-900">
+                Events for this day
+              </h3>
+              <button
+                onClick={() => setShowDayView(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-all">
+                <FaTimes className="text-gray-500" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              {selectedDayEvents.map((event, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <h4 className="font-semibold text-gray-900">{event.title}</h4>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {event.startTime} - {event.endTime}
+                  </p>
+                  {event.description && (
+                    <p className="text-sm text-gray-600 mt-2">
+                      {event.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Event Modal */}
       {showEventModal && (
@@ -385,23 +397,6 @@ const CalendarSchedule = () => {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  value={currentEvent.location}
-                  onChange={(e) =>
-                    setCurrentEvent({
-                      ...currentEvent,
-                      location: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none"
-                  placeholder="Event location"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Description
                 </label>
                 <textarea
@@ -437,4 +432,4 @@ const CalendarSchedule = () => {
   );
 };
 
-export default CalendarSchedule;
+export default Calendar;

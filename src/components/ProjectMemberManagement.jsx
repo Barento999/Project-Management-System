@@ -88,26 +88,26 @@ const ProjectMemberManagement = ({ project, onUpdate }) => {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-800">Team Members</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Team Members</h3>
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md">
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md">
           <FaPlus />
           <span>Add Member</span>
         </button>
       </div>
 
       {/* Owner */}
-      <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+      <div className="bg-gray-50 rounded-xl p-4 border-2 border-gray-200">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+          <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
             {project.owner.name?.charAt(0)}
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-gray-800">{project.owner.name}</p>
-            <p className="text-sm text-gray-600">{project.owner.email}</p>
+            <p className="font-semibold text-gray-900">{project.owner.name}</p>
+            <p className="text-sm text-gray-500">{project.owner.email}</p>
           </div>
-          <span className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm font-semibold">
+          <span className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm font-semibold">
             Owner
           </span>
         </div>
@@ -121,12 +121,12 @@ const ProjectMemberManagement = ({ project, onUpdate }) => {
               key={member._id}
               className="bg-white rounded-xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                   {member.name?.charAt(0)}
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-gray-800">{member.name}</p>
-                  <p className="text-sm text-gray-600">{member.email}</p>
+                  <p className="font-semibold text-gray-900">{member.name}</p>
+                  <p className="text-sm text-gray-500">{member.email}</p>
                 </div>
                 <button
                   onClick={() => handleRemoveMember(member._id)}
@@ -140,8 +140,8 @@ const ProjectMemberManagement = ({ project, onUpdate }) => {
       ) : (
         <div className="text-center py-8 bg-gray-50 rounded-xl">
           <FaUser className="text-4xl text-gray-300 mx-auto mb-2" />
-          <p className="text-gray-600">No members yet</p>
-          <p className="text-sm text-gray-500">
+          <p className="text-gray-500">No members yet</p>
+          <p className="text-sm text-gray-400">
             Add team members to collaborate
           </p>
         </div>
@@ -149,17 +149,17 @@ const ProjectMemberManagement = ({ project, onUpdate }) => {
 
       {/* Add Member Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 flex items-center justify-between">
+            <div className="bg-blue-600 text-white p-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <FaPlus className="text-2xl" />
                 <h2 className="text-xl font-bold">Add Team Member</h2>
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+                className="p-2 hover:bg-blue-700 rounded-lg transition-colors">
                 <FaTimes />
               </button>
             </div>
@@ -173,8 +173,8 @@ const ProjectMemberManagement = ({ project, onUpdate }) => {
               ) : availableUsers.length === 0 ? (
                 <div className="text-center py-8">
                   <FaUser className="text-5xl text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-600">No users available to add</p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-gray-500">No users available to add</p>
+                  <p className="text-sm text-gray-400 mt-1">
                     All users are already members of this project
                   </p>
                 </div>
@@ -186,14 +186,14 @@ const ProjectMemberManagement = ({ project, onUpdate }) => {
                       onClick={() => handleAddMember(user._id)}
                       disabled={adding}
                       className="w-full flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-blue-50 hover:border-blue-300 border-2 border-transparent transition-all disabled:opacity-50">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                         {user.name?.charAt(0)}
                       </div>
                       <div className="flex-1 text-left">
-                        <p className="font-semibold text-gray-800">
+                        <p className="font-semibold text-gray-900">
                           {user.name}
                         </p>
-                        <p className="text-sm text-gray-600">{user.email}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
                         <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full inline-block mt-1">
                           {user.role}
                         </span>

@@ -4,12 +4,12 @@
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  line-height: 1.6; /* Comfortable line spacing */
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #f9fafb; /* Light gray background */
+  color: #111827; /* Dark gray for body text */
+  background-color: #f8fafc; /* Soft light gray app background */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,13 +17,66 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Typography - Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700; /* Bold */
+  color: #111827; /* Dark gray */
+  line-height: 1.2;
+  margin: 0;
+}
+
+h1 {
+  font-size: 2.5rem; /* 40px */
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 2rem; /* 32px */
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.4;
+}
+
+h5 {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.4;
+}
+
+h6 {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5;
+}
+
+/* Body text */
+p {
+  line-height: 1.6; /* Comfortable spacing */
+  margin: 0;
+  color: #374151; /* Gray-700 for body text */
+}
+
+/* Links */
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: #2563eb; /* Blue-600 */
+  text-decoration: none;
+  transition: color 0.2s;
 }
+
 a:hover {
-  color: #535bf2;
+  color: #1d4ed8; /* Blue-700 */
 }
 
 body {
@@ -32,7 +85,152 @@ body {
   min-width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: #f9fafb;
+  background-color: #f8fafc; /* Soft light gray app background */
+}
+
+/* Hide scrollbar in sidebar navigation only */
+nav.overflow-y-auto::-webkit-scrollbar {
+  display: none;
+}
+
+nav.overflow-y-auto {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Standardized form inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+  border-color: #d1d5db; /* gray-300 */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #2563eb; /* blue-600 */
+  ring-color: #93c5fd; /* blue-300 */
+  outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af; /* gray-400 */
+}
+
+/* Main app container background */
+#root {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Page content background */
+.page-container {
+  background-color: #f5f7fb;
+  min-height: calc(100vh - 64px); /* Subtract header height */
+}
+
+/* Card styles - consistent across all components */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border-radius: 0.75rem; /* 12px */
+  transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Card with stronger elevation */
+.card-elevated {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 0.75rem;
+}
+
+/* Modal/Dialog cards */
+.card-modal {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-radius: 1rem; /* 16px */
+}
+
+/* Primary action button - Blue background, white text */
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary action button - White background, blue border */
+.btn-secondary {
+  background-color: white;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-secondary:hover {
+  background-color: #eff6ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* Danger button - Red background for destructive actions */
+.btn-danger {
+  background-color: #dc2626;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
 }
 
 h1 {
@@ -62,7 +260,10 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #f9fafb;
+    background-color: #f8fafc;
+  }
+  body {
+    background-color: #f8fafc;
   }
   a:hover {
     color: #747bff;
@@ -123,7 +324,11 @@ button:focus-visible {
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
@@ -140,7 +345,8 @@ button:focus-visible {
 }
 
 .glow-on-hover:hover {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 

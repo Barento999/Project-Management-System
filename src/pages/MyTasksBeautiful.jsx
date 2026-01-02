@@ -42,26 +42,28 @@ const MyTasksBeautiful = () => {
 
   const getPriorityColor = (priority) => {
     const colors = {
-      low: "bg-green-100 text-green-700 border-green-300",
-      medium: "bg-yellow-100 text-yellow-700 border-yellow-300",
-      high: "bg-orange-100 text-orange-700 border-orange-300",
-      critical: "bg-red-100 text-red-700 border-red-300",
+      low: "bg-green-600 text-white border-green-600",
+      medium: "bg-amber-500 text-white border-amber-500",
+      high: "bg-red-600 text-white border-red-600",
+      critical: "bg-red-600 text-white border-red-600",
     };
     return colors[priority] || colors.medium;
   };
 
   const getStatusColor = (status) => {
     const colors = {
-      todo: "bg-gray-100 text-gray-700",
-      "in-progress": "bg-blue-100 text-blue-700",
-      done: "bg-green-100 text-green-700",
+      todo: "bg-gray-400 text-white",
+      "in-progress": "bg-blue-600 text-white",
+      review: "bg-purple-600 text-white",
+      done: "bg-green-600 text-white",
+      blocked: "bg-red-600 text-white",
     };
     return colors[status] || colors.todo;
   };
 
   const getStatusIcon = (status) => {
     const icons = {
-      todo: <FaClock className="text-gray-600" />,
+      todo: <FaClock className="text-gray-500" />,
       "in-progress": <FaSpinner className="text-blue-600" />,
       done: <FaCheckCircle className="text-green-600" />,
     };
@@ -95,76 +97,74 @@ const MyTasksBeautiful = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
-        <FaSpinner className="text-5xl text-purple-600 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <FaSpinner className="text-5xl text-blue-600 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-2">
-          My Tasks
-        </h1>
-        <p className="text-gray-600">Tasks assigned to you</p>
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">My Tasks</h1>
+        <p className="text-gray-500">Tasks assigned to you</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-purple-500">
+        <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-blue-600">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 text-sm">Total Tasks</p>
-              <p className="text-3xl font-bold text-gray-800">
+              <p className="text-gray-500 text-sm">Total Tasks</p>
+              <p className="text-3xl font-bold text-gray-900">
                 {taskStats.total}
               </p>
             </div>
-            <FaTasks className="text-4xl text-purple-500" />
+            <FaTasks className="text-4xl text-blue-600" />
           </div>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-gray-500">
+        <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-gray-400">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 text-sm">To Do</p>
-              <p className="text-3xl font-bold text-gray-800">
+              <p className="text-gray-500 text-sm">To Do</p>
+              <p className="text-3xl font-bold text-gray-900">
                 {taskStats.todo}
               </p>
             </div>
-            <FaClock className="text-4xl text-gray-500" />
+            <FaClock className="text-4xl text-gray-400" />
           </div>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-blue-500">
+        <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-blue-600">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 text-sm">In Progress</p>
-              <p className="text-3xl font-bold text-gray-800">
+              <p className="text-gray-500 text-sm">In Progress</p>
+              <p className="text-3xl font-bold text-gray-900">
                 {taskStats.inProgress}
               </p>
             </div>
-            <FaSpinner className="text-4xl text-blue-500" />
+            <FaSpinner className="text-4xl text-blue-600" />
           </div>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-green-500">
+        <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-green-600">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 text-sm">Completed</p>
-              <p className="text-3xl font-bold text-gray-800">
+              <p className="text-gray-500 text-sm">Completed</p>
+              <p className="text-3xl font-bold text-gray-900">
                 {taskStats.done}
               </p>
             </div>
-            <FaCheckCircle className="text-4xl text-green-500" />
+            <FaCheckCircle className="text-4xl text-green-600" />
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 shadow-lg mb-6">
+      <div className="bg-white rounded-xl p-4 shadow-lg mb-6 border border-gray-200">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <FaFilter className="text-gray-600" />
-            <span className="font-semibold text-gray-700">Filter:</span>
+            <FaFilter className="text-gray-500" />
+            <span className="font-semibold text-gray-900">Filter:</span>
           </div>
           <div className="flex gap-2">
             {["all", "todo", "in-progress", "done"].map((status) => (
@@ -173,7 +173,7 @@ const MyTasksBeautiful = () => {
                 onClick={() => setFilter(status)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
                   filter === status
-                    ? "bg-purple-600 text-white shadow-lg"
+                    ? "bg-blue-600 text-white shadow-lg"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}>
                 {status === "all"
@@ -183,11 +183,11 @@ const MyTasksBeautiful = () => {
             ))}
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <span className="font-semibold text-gray-700">Sort by:</span>
+            <span className="font-semibold text-gray-900">Sort by:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none">
               <option value="dueDate">Due Date</option>
               <option value="priority">Priority</option>
               <option value="createdAt">Created Date</option>
@@ -198,10 +198,10 @@ const MyTasksBeautiful = () => {
 
       {/* Tasks List */}
       {sortedTasks.length === 0 ? (
-        <div className="bg-white rounded-xl p-12 shadow-lg text-center">
+        <div className="bg-white rounded-xl p-12 shadow-lg text-center border border-gray-200">
           <FaTasks className="text-6xl text-gray-300 mx-auto mb-4" />
-          <p className="text-xl text-gray-600">No tasks found</p>
-          <p className="text-gray-500 mt-2">
+          <p className="text-xl text-gray-500">No tasks found</p>
+          <p className="text-gray-400 mt-2">
             {filter === "all"
               ? "You don't have any assigned tasks yet"
               : `No tasks in "${filter}" status`}
@@ -213,16 +213,16 @@ const MyTasksBeautiful = () => {
             <div
               key={task._id}
               onClick={() => navigate(`/tasks/${task._id}`)}
-              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border-l-4 border-purple-500">
+              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border-l-4 border-blue-600">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     {getStatusIcon(task.status)}
-                    <h3 className="text-xl font-bold text-gray-800">
+                    <h3 className="text-xl font-bold text-gray-900">
                       {task.title}
                     </h3>
                   </div>
-                  <p className="text-gray-600 mb-3">
+                  <p className="text-gray-500 mb-3">
                     {task.description || "No description"}
                   </p>
                   <div className="flex flex-wrap items-center gap-3">
@@ -233,19 +233,19 @@ const MyTasksBeautiful = () => {
                       {task.status.replace("-", " ").toUpperCase()}
                     </span>
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium border ${getPriorityColor(
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(
                         task.priority
                       )}`}>
                       <FaFlag className="inline mr-1" />
                       {task.priority?.toUpperCase()}
                     </span>
                     {task.project && (
-                      <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                      <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200">
                         📁 {task.project.name}
                       </span>
                     )}
                     {task.dueDate && (
-                      <span className="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm font-medium">
+                      <span className="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-sm font-medium border border-amber-200">
                         <FaCalendar className="inline mr-1" />
                         {new Date(task.dueDate).toLocaleDateString()}
                       </span>

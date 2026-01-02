@@ -18,9 +18,9 @@ const NotificationsBeautiful = () => {
 
   useEffect(() => {
     fetchNotifications();
-  }, [filter]);
+  }, [fetchNotifications, filter]);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
       const params = filter === "unread" ? { unreadOnly: true } : {};
@@ -32,7 +32,7 @@ const NotificationsBeautiful = () => {
     } finally {
       setLoading(false);
     }
-  };
+  });
 
   const markAsRead = async (id) => {
     try {
@@ -129,7 +129,9 @@ const NotificationsBeautiful = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "#F5F7FB" }}>
         <div className="text-center">
           <FaBell className="w-16 h-16 text-indigo-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading notifications...</p>
@@ -139,7 +141,9 @@ const NotificationsBeautiful = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 md:p-8">
+    <div
+      className="min-h-screen p-4 md:p-8"
+      style={{ backgroundColor: "#F5F7FB" }}>
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -150,7 +154,7 @@ const NotificationsBeautiful = () => {
       <div className="relative max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
             🔔 Notifications
           </h1>
           <p className="text-gray-600">
@@ -164,7 +168,7 @@ const NotificationsBeautiful = () => {
             <div className="flex items-center gap-6">
               <div>
                 <p className="text-sm text-gray-600">Total</p>
-                <p className="text-2xl font-bold text-gray-800">
+                <p className="text-2xl font-bold text-gray-900">
                   {notifications.length}
                 </p>
               </div>
@@ -225,7 +229,7 @@ const NotificationsBeautiful = () => {
           {filteredNotifications.length === 0 ? (
             <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-12 shadow-lg border border-white/50 text-center">
               <FaBell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-700 mb-2">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
                 No notifications
               </h3>
               <p className="text-gray-500">
@@ -250,7 +254,7 @@ const NotificationsBeautiful = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="text-lg font-bold text-gray-800">
+                      <h3 className="text-lg font-bold text-gray-900">
                         {notification.title}
                       </h3>
                       {!notification.isRead && (
@@ -281,7 +285,7 @@ const NotificationsBeautiful = () => {
                             e.stopPropagation();
                             deleteNotification(notification._id);
                           }}
-                          className="px-3 py-1 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-all flex items-center gap-1">
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-all flex items-center gap-1">
                           <FaTrash className="text-xs" />
                           Delete
                         </button>

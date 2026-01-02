@@ -21,7 +21,7 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
 
   useEffect(() => {
     fetchComments();
-  }, [entityType, entityId]);
+  }, [entityType, entityId, fetchComments]);
 
   const fetchComments = async () => {
     try {
@@ -111,7 +111,7 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
 
   if (loading) {
     return (
-      <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/50">
+      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
         <div className="flex items-center justify-center py-8">
           <FaComment className="w-8 h-8 text-gray-400 animate-pulse" />
           <span className="ml-3 text-gray-500">Loading comments...</span>
@@ -121,10 +121,10 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
   }
 
   return (
-    <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/50">
+    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
           <FaComment className="text-blue-600" />
           Comments ({comments.length})
         </h3>
@@ -134,7 +134,7 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
       <form onSubmit={handleSubmit} className="mb-6">
         <div className="flex gap-3">
           <div className="flex-shrink-0">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg">
+            <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-lg">
               {user?.name?.charAt(0)}
             </div>
           </div>
@@ -143,17 +143,17 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder={`Add a comment to ${entityName}... (Use @username to mention)`}
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 outline-none transition-all resize-none"
               rows="3"
             />
             <div className="flex justify-between items-center mt-2">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-400">
                 Tip: Use @username to mention someone
               </span>
               <button
                 type="submit"
                 disabled={submitting || !newComment.trim()}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
                 <FaPaperPlane className="text-sm" />
                 {submitting ? "Posting..." : "Post"}
               </button>
@@ -174,16 +174,16 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
           comments.map((comment) => (
             <div
               key={comment._id}
-              className="flex gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white hover:shadow-md transition-all">
+              className="flex gap-3 p-4 rounded-xl bg-gray-50 hover:shadow-md transition-all">
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center text-white font-bold shadow-lg">
+                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-lg">
                   {comment.author?.name?.charAt(0) || <FaUser />}
                 </div>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="font-semibold text-gray-800">
+                    <p className="font-semibold text-gray-900">
                       {comment.author?.name || "Unknown User"}
                     </p>
                     <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -217,7 +217,7 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
                     <textarea
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border-2 border-blue-300 focus:border-blue-500 outline-none resize-none"
+                      className="w-full px-3 py-2 rounded-lg border-2 border-blue-300 focus:border-blue-600 outline-none resize-none"
                       rows="3"
                     />
                     <div className="flex gap-2 mt-2">

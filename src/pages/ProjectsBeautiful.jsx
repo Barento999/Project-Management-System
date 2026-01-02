@@ -98,21 +98,21 @@ const ProjectsBeautiful = () => {
 
   const getPriorityColor = (priority) => {
     const colors = {
-      low: "from-green-400 to-emerald-500",
-      medium: "from-yellow-400 to-orange-500",
-      high: "from-orange-500 to-red-500",
-      critical: "from-red-500 to-pink-600",
+      low: "bg-green-600 text-white",
+      medium: "bg-amber-500 text-white",
+      high: "bg-red-600 text-white",
+      critical: "bg-red-600 text-white",
     };
     return colors[priority] || colors.medium;
   };
 
   const getStatusColor = (status) => {
     const colors = {
-      planned: "from-purple-400 to-indigo-500",
-      active: "from-green-400 to-emerald-500",
-      "on-hold": "from-yellow-400 to-orange-500",
-      completed: "from-blue-400 to-cyan-500",
-      cancelled: "from-gray-400 to-gray-500",
+      planned: "bg-gray-400 text-white",
+      active: "bg-blue-600 text-white",
+      "on-hold": "bg-amber-500 text-white",
+      completed: "bg-green-600 text-white",
+      cancelled: "bg-red-600 text-white",
     };
     return colors[status] || colors.active;
   };
@@ -131,26 +131,19 @@ const ProjectsBeautiful = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 sm:p-6 lg:p-8">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-slate-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8 text-center">
           <div className="inline-block mb-4">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg transform hover:scale-105 transition-transform">
+            <div className="bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-md">
               2️⃣ Create Projects After Teams
             </div>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 animate-fade-in">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Projects
           </h1>
-          <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
+          <p className="text-gray-500 text-sm sm:text-base lg:text-lg">
             Manage your amazing projects
           </p>
         </div>
@@ -159,15 +152,12 @@ const ProjectsBeautiful = () => {
         <div className="flex justify-center mb-6 sm:mb-8">
           <button
             onClick={() => setShowCreateForm(!showCreateForm)}
-            className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl sm:rounded-2xl font-semibold shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="relative flex items-center gap-2 sm:gap-3">
-              <FaPlus className="text-lg sm:text-xl group-hover:rotate-90 transition-transform duration-300" />
-              <span className="text-sm sm:text-base lg:text-lg">
-                {showCreateForm ? "Cancel" : "Create New Project"}
-              </span>
-              <FaRocket className="text-lg sm:text-xl group-hover:translate-x-2 transition-transform duration-300" />
-            </div>
+            className="px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center gap-2 sm:gap-3">
+            <FaPlus className="text-lg sm:text-xl" />
+            <span className="text-sm sm:text-base lg:text-lg">
+              {showCreateForm ? "Cancel" : "Create New Project"}
+            </span>
+            <FaRocket className="text-lg sm:text-xl" />
           </button>
         </div>
 
@@ -175,7 +165,7 @@ const ProjectsBeautiful = () => {
         {showCreateForm && (
           <div className="mb-8 animate-slide-down">
             <div className="bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/50">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 ✨ Create New Project
               </h2>
 
@@ -289,7 +279,7 @@ const ProjectsBeautiful = () => {
                 <button
                   type="submit"
                   disabled={teams.length === 0}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                   🚀 Create Project
                 </button>
               </form>
@@ -299,14 +289,14 @@ const ProjectsBeautiful = () => {
 
         {/* Edit Modal */}
         {showEditForm && currentProject && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-            <div className="bg-white/90 backdrop-blur-xl p-6 sm:p-8 rounded-3xl shadow-2xl w-full max-w-2xl border border-white/50 animate-slide-down max-h-[90vh] overflow-y-auto">
-              <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-2xl border border-gray-200 max-h-[90vh] overflow-y-auto">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
                 Edit Project
               </h3>
               <form onSubmit={handleUpdate} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Project Name *
                   </label>
                   <input
@@ -318,12 +308,12 @@ const ProjectsBeautiful = () => {
                         name: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-all"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Description
                   </label>
                   <textarea
@@ -334,13 +324,13 @@ const ProjectsBeautiful = () => {
                         description: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-all"
                     rows="3"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Status
                     </label>
                     <select
@@ -351,7 +341,7 @@ const ProjectsBeautiful = () => {
                           status: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all">
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-all">
                       <option value="planned">📋 Planned</option>
                       <option value="active">🚀 Active</option>
                       <option value="on-hold">⏸️ On Hold</option>
@@ -359,7 +349,7 @@ const ProjectsBeautiful = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Priority
                     </label>
                     <select
@@ -370,7 +360,7 @@ const ProjectsBeautiful = () => {
                           priority: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all">
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-all">
                       <option value="low">🟢 Low</option>
                       <option value="medium">🟡 Medium</option>
                       <option value="high">🟠 High</option>
@@ -385,12 +375,12 @@ const ProjectsBeautiful = () => {
                       setShowEditForm(false);
                       setCurrentProject(null);
                     }}
-                    className="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all">
+                    className="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors">
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
+                    className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
                     Save Changes
                   </button>
                 </div>
@@ -402,9 +392,9 @@ const ProjectsBeautiful = () => {
         {/* Projects Grid */}
         {projects.length === 0 ? (
           <div className="text-center py-20">
-            <div className="inline-block p-8 bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl">
-              <FaFolder className="mx-auto text-6xl text-gray-300 mb-4 animate-bounce" />
-              <h3 className="text-2xl font-bold text-gray-700 mb-2">
+            <div className="inline-block p-8 bg-white rounded-xl shadow-lg border border-gray-200">
+              <FaFolder className="mx-auto text-6xl text-gray-300 mb-4" />
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 No projects yet
               </h3>
               <p className="text-gray-500 mb-6">
@@ -412,41 +402,37 @@ const ProjectsBeautiful = () => {
               </p>
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
                 Create First Project
               </button>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <div
                 key={project._id}
-                onClick={() => navigate(`/projects/${project._id}`)}
-                className="group bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden border border-white/50 cursor-pointer"
-                style={{ animationDelay: `${index * 100}ms` }}>
-                {/* Card Header with Gradient */}
+                className="group bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-gray-200">
+                {/* Card Header with Priority Color */}
                 <div
-                  className={`h-2 bg-gradient-to-r ${getPriorityColor(
-                    project.priority
-                  )}`}></div>
+                  className={`h-2 ${getPriorityColor(project.priority)}`}></div>
 
                 <div className="p-4 sm:p-6">
                   {/* Project Icon and Title */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                       <div
-                        className={`p-2 sm:p-3 bg-gradient-to-r ${getPriorityColor(
+                        className={`p-2 sm:p-3 ${getPriorityColor(
                           project.priority
-                        )} rounded-lg sm:rounded-xl shadow-lg flex-shrink-0`}>
+                        )} rounded-lg shadow-md flex-shrink-0`}>
                         <FaFolder className="text-white text-lg sm:text-xl" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors truncate">
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
                           {project.name}
                         </h3>
                         <div className="flex items-center gap-2 mt-1">
-                          <FaStar className="text-yellow-400 text-xs sm:text-sm flex-shrink-0" />
+                          <FaStar className="text-blue-600 text-xs sm:text-sm flex-shrink-0" />
                           <span className="text-[10px] sm:text-xs text-gray-500">
                             Featured
                           </span>
@@ -462,7 +448,7 @@ const ProjectsBeautiful = () => {
                           setCurrentProject(project);
                           setShowEditForm(true);
                         }}
-                        className="p-1.5 sm:p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">
+                        className="p-1.5 sm:p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                         <FaEdit className="text-sm" />
                       </button>
                       <button
@@ -470,25 +456,25 @@ const ProjectsBeautiful = () => {
                           e.stopPropagation();
                           handleDelete(project._id);
                         }}
-                        className="p-1.5 sm:p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors">
+                        className="p-1.5 sm:p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
                         <FaTrash className="text-sm" />
                       </button>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm sm:text-base text-gray-600 mb-4 line-clamp-2">
+                  <p className="text-sm sm:text-base text-gray-500 mb-4 line-clamp-2">
                     {project.description || "No description provided"}
                   </p>
 
                   {/* Stats */}
                   <div className="flex items-center gap-3 sm:gap-4 mb-4 text-xs sm:text-sm text-gray-500">
                     <div className="flex items-center gap-1">
-                      <FaUsers className="text-blue-500 text-sm" />
+                      <FaUsers className="text-blue-600 text-sm" />
                       <span>{project.members?.length || 0}</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <FaClock className="text-purple-500 text-sm" />
+                      <FaClock className="text-blue-600 text-sm" />
                       <span className="truncate">
                         {new Date(project.createdAt).toLocaleDateString()}
                       </span>
@@ -498,23 +484,25 @@ const ProjectsBeautiful = () => {
                   {/* Badges */}
                   <div className="flex gap-2">
                     <span
-                      className={`px-3 py-1 bg-gradient-to-r ${getStatusColor(
+                      className={`px-3 py-1 ${getStatusColor(
                         project.status
-                      )} text-white text-xs font-bold rounded-full shadow-md`}>
+                      )} text-xs font-semibold rounded-full`}>
                       {project.status}
                     </span>
                     <span
-                      className={`px-3 py-1 bg-gradient-to-r ${getPriorityColor(
+                      className={`px-3 py-1 ${getPriorityColor(
                         project.priority
-                      )} text-white text-xs font-bold rounded-full shadow-md`}>
+                      )} text-xs font-semibold rounded-full`}>
                       {project.priority}
                     </span>
                   </div>
                 </div>
 
                 {/* Card Footer */}
-                <div className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200">
-                  <button className="w-full text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                <div className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-50 border-t border-gray-200">
+                  <button
+                    onClick={() => navigate(`/projects/${project._id}`)}
+                    className="w-full text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
                     View Details →
                   </button>
                 </div>
