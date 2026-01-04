@@ -34,6 +34,9 @@ import Calendar from "./pages/Calendar";
 import Reports from "./pages/Reports";
 import Documents from "./pages/Documents";
 import Messages from "./pages/Messages";
+import MessagesInbox from "./pages/MessagesInbox";
+import MessagesSent from "./pages/MessagesSent";
+import MessagesNew from "./pages/MessagesNew";
 import ProjectsCreate from "./pages/ProjectsCreate";
 import TasksCreate from "./pages/TasksCreate";
 import TeamsCreate from "./pages/TeamsCreate";
@@ -48,8 +51,6 @@ import ReportsTasks from "./pages/ReportsTasks";
 import ReportsTeams from "./pages/ReportsTeams";
 import DocumentsMy from "./pages/DocumentsMy";
 import DocumentsShared from "./pages/DocumentsShared";
-import MessagesSent from "./pages/MessagesSent";
-import MessagesNew from "./pages/MessagesNew";
 import AdminSettings from "./pages/AdminSettings";
 import AdminLogs from "./pages/AdminLogs";
 import AdminUsers from "./pages/AdminUsers";
@@ -338,6 +339,14 @@ function App() {
                           element={
                             <ProtectedRoute>
                               <Messages />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/messages/inbox"
+                          element={
+                            <ProtectedRoute>
+                              <MessagesInbox />
                             </ProtectedRoute>
                           }
                         />
