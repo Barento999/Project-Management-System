@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaChartBar,
@@ -10,10 +10,70 @@ import {
   FaCalendarAlt,
   FaClock,
 } from "react-icons/fa";
+import { projectAPI, taskAPI, teamAPI, activityLogAPI } from "../services/api";
 
 const Reports = () => {
   const navigate = useNavigate();
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [projectsRes, tasksRes, teamsRes, activityRes] = await Promise.all([
+        projectAPI.getAll(),
+        taskAPI.getAll(),
+        teamAPI.getAll(),
+        activityLogAPI.getAll({ limit: 5 }),
+      ]);
+
+      setProjects(projectsRes.data.projects || []);
+      setTasks(tasksRes.data.tasks || []);
+      setTeams(teamsRes.data.teams || []);
+      setRecentActivity(activityRes.data.activityLogs || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setProjects([]);
+      setTasks([]);
+      setTeams([]);
+      setRecentActivity([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate statistics
+  const activeProjects = projects.filter(
+    (p) => p.status === "IN_PROGRESS"
+  ).length;
+  const completedProjects = projects.filter(
+    (p) => p.status === "COMPLETED"
+  ).length;
+
+  const completedTasks = tasks.filter((t) => t.status === "COMPLETED").length;
+  const pendingTasks = tasks.filter((t) => t.status !== "COMPLETED").length;
+
+  const totalMembers = teams.reduce(
+    (acc, team) => acc + (team.members?.length || 0),
+    0
+  );
+  const activeTeams = teams.filter(
+    (t) => t.members && t.members.length > 0
+  ).length;
+
+  // Calculate this month's projects
+  const thisMonth = new Date();
+  thisMonth.setDate(1);
+  const thisMonthProjects = projects.filter((p) => {
+    const createdDate = new Date(p.createdAt);
+    return createdDate >= thisMonth;
+  }).length;
 
   const reportCategories = [
     {
@@ -21,7 +81,11 @@ const Reports = () => {
       description: "View project progress, timelines, and metrics",
       icon: <FaProjectDiagram className="text-4xl text-blue-600" />,
       path: "/reports/projects",
-      stats: { total: 12, active: 8, completed: 4 },
+      stats: {
+        total: projects.length,
+        active: activeProjects,
+        completed: completedProjects,
+      },
       color: "blue",
     },
     {
@@ -29,7 +93,11 @@ const Reports = () => {
       description: "View task completion rates and performance",
       icon: <FaTasks className="text-4xl text-green-600" />,
       path: "/reports/tasks",
-      stats: { total: 48, completed: 32, pending: 16 },
+      stats: {
+        total: tasks.length,
+        completed: completedTasks,
+        pending: pendingTasks,
+      },
       color: "green",
     },
     {
@@ -37,7 +105,11 @@ const Reports = () => {
       description: "View team productivity and activity metrics",
       icon: <FaUsers className="text-4xl text-purple-600" />,
       path: "/reports/teams",
-      stats: { total: 5, members: 24, active: 20 },
+      stats: {
+        total: teams.length,
+        members: totalMembers,
+        active: activeTeams,
+      },
       color: "purple",
     },
   ];
@@ -45,29 +117,64 @@ const Reports = () => {
   const quickStats = [
     {
       label: "Total Projects",
-      value: "12",
+      value: projects.length.toString(),
       icon: <FaProjectDiagram className="text-2xl" />,
       color: "blue",
     },
     {
       label: "Completed Tasks",
-      value: "32",
+      value: completedTasks.toString(),
       icon: <FaTasks className="text-2xl" />,
       color: "green",
     },
     {
       label: "Team Members",
-      value: "24",
+      value: totalMembers.toString(),
       icon: <FaUsers className="text-2xl" />,
       color: "purple",
     },
     {
       label: "This Month",
-      value: "8",
+      value: thisMonthProjects.toString(),
       icon: <FaCalendarAlt className="text-2xl" />,
       color: "amber",
     },
   ];
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (hours < 1) return "Just now";
+    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    if (days < 7) return `${days} day${days > 1 ? "s" : ""} ago`;
+    return date.toLocaleDateString();
+  };
+
+  const getActivityIcon = (action) => {
+    if (action.includes("project") || action.includes("Project")) {
+      return <FaProjectDiagram className="text-blue-600 text-lg" />;
+    } else if (action.includes("task") || action.includes("Task")) {
+      return <FaTasks className="text-green-600 text-lg" />;
+    } else if (action.includes("team") || action.includes("Team")) {
+      return <FaUsers className="text-purple-600 text-lg" />;
+    }
+    return <FaClock className="text-gray-600 text-lg" />;
+  };
+
+  const getActivityColor = (action) => {
+    if (action.includes("project") || action.includes("Project")) {
+      return "bg-blue-100";
+    } else if (action.includes("task") || action.includes("Task")) {
+      return "bg-green-100";
+    } else if (action.includes("team") || action.includes("Team")) {
+      return "bg-purple-100";
+    }
+    return "bg-gray-100";
+  };
 
   if (loading) {
     return (
@@ -171,53 +278,36 @@ const Reports = () => {
           </div>
 
           <div className="space-y-4">
-            {[
-              {
-                action: "Project Report Generated",
-                time: "2 hours ago",
-                type: "project",
-              },
-              {
-                action: "Task Report Updated",
-                time: "5 hours ago",
-                type: "task",
-              },
-              {
-                action: "Team Report Exported",
-                time: "1 day ago",
-                type: "team",
-              },
-            ].map((activity, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition-all">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`p-2 rounded-lg ${
-                      activity.type === "project"
-                        ? "bg-blue-100"
-                        : activity.type === "task"
-                        ? "bg-green-100"
-                        : "bg-purple-100"
-                    }`}>
-                    {activity.type === "project" ? (
-                      <FaProjectDiagram className={`text-blue-600 text-lg`} />
-                    ) : activity.type === "task" ? (
-                      <FaTasks className={`text-green-600 text-lg`} />
-                    ) : (
-                      <FaUsers className={`text-purple-600 text-lg`} />
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">
-                      {activity.action}
-                    </p>
-                    <p className="text-sm text-gray-500">{activity.time}</p>
-                  </div>
-                </div>
-                <FaArrowRight className="text-gray-400" />
+            {recentActivity.length === 0 ? (
+              <div className="text-center py-8">
+                <FaClock className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-500">No recent activity</p>
               </div>
-            ))}
+            ) : (
+              recentActivity.map((activity) => (
+                <div
+                  key={activity._id}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition-all">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`p-2 rounded-lg ${getActivityColor(
+                        activity.action
+                      )}`}>
+                      {getActivityIcon(activity.action)}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">
+                        {activity.action}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {formatDate(activity.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                  <FaArrowRight className="text-gray-400" />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

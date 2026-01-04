@@ -112,9 +112,24 @@ const Sidebar = ({ onClose }) => {
   const adminNavItems = [
     ...navItems,
     {
-      name: "Admin Panel",
+      name: "Admin Dashboard",
       path: "/admin",
       icon: <FaUsersCog />,
+    },
+    {
+      name: "Admin Users",
+      path: "/admin/users",
+      icon: <FaUsers />,
+    },
+    {
+      name: "Admin Settings",
+      path: "/admin/settings",
+      icon: <FaCog />,
+    },
+    {
+      name: "Admin Logs",
+      path: "/admin/logs",
+      icon: <FaClipboardList />,
     },
   ];
 

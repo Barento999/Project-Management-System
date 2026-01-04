@@ -10,7 +10,6 @@ import {
   FaTimes,
   FaUsers,
 } from "react-icons/fa";
-import { calendarAPI } from "../utils/api";
 
 const Calendar = () => {
   const navigate = useNavigate();
@@ -26,10 +25,35 @@ const Calendar = () => {
     fetchEvents();
   }, []);
 
-  const fetchEvents = async () => {
+  const fetchEvents = () => {
     try {
-      const response = await calendarAPI.getEvents();
-      setEvents(response.data.events || []);
+      // Load events from localStorage
+      const storedEvents = localStorage.getItem("calendar_events");
+      if (storedEvents) {
+        setEvents(JSON.parse(storedEvents));
+      } else {
+        // Demo events
+        const demoEvents = [
+          {
+            _id: "1",
+            title: "Team Meeting",
+            description: "Weekly team sync",
+            date: new Date().toISOString().split("T")[0],
+            startTime: "10:00",
+            endTime: "11:00",
+          },
+          {
+            _id: "2",
+            title: "Project Review",
+            description: "Q1 project review",
+            date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
+            startTime: "14:00",
+            endTime: "15:30",
+          },
+        ];
+        setEvents(demoEvents);
+        localStorage.setItem("calendar_events", JSON.stringify(demoEvents));
+      }
     } catch (error) {
       console.error("Error fetching events:", error);
       setEvents([]);
@@ -50,15 +74,26 @@ const Calendar = () => {
     setShowEventModal(true);
   };
 
-  const handleSaveEvent = async () => {
+  const handleSaveEvent = () => {
     try {
+      let updatedEvents;
       if (currentEvent._id) {
-        await calendarAPI.updateEvent(currentEvent._id, currentEvent);
+        // Update existing event
+        updatedEvents = events.map((e) =>
+          e._id === currentEvent._id ? currentEvent : e
+        );
       } else {
-        await calendarAPI.createEvent(currentEvent);
+        // Create new event
+        const newEvent = {
+          ...currentEvent,
+          _id: Date.now().toString(),
+        };
+        updatedEvents = [...events, newEvent];
       }
+      setEvents(updatedEvents);
+      localStorage.setItem("calendar_events", JSON.stringify(updatedEvents));
       setShowEventModal(false);
-      fetchEvents();
+      setCurrentEvent(null);
     } catch (error) {
       console.error("Error saving event:", error);
       alert("Failed to save event. Please try again.");

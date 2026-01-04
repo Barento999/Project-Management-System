@@ -1,6 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { adminAPI } from '../utils/api';
-import { FaUser, FaUsers, FaProjectDiagram, FaTasks, FaChartBar, FaBell, FaCog, FaSearch, FaFilter, FaSortAmountDown } from 'react-icons/fa';
+import { useState, useEffect } from "react";
+import {
+  authAPI,
+  userAPI,
+  projectAPI,
+  taskAPI,
+  teamAPI,
+} from "../services/api";
+import {
+  FaUser,
+  FaUsers,
+  FaProjectDiagram,
+  FaTasks,
+  FaChartBar,
+  FaSearch,
+} from "react-icons/fa";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -11,27 +24,25 @@ const AdminDashboard = () => {
     activeProjects: 0,
     totalTasks: 0,
     completedTasks: 0,
-    inProgressTasks: 0
+    inProgressTasks: 0,
   });
   const [recentActivity, setRecentActivity] = useState({
     recentTasks: [],
     recentProjects: [],
     recentTeams: [],
-    recentUsers: []
+    recentUsers: [],
   });
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [teams, setTeams] = useState([]);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState("overview");
+  const [searchTerm, setSearchTerm] = useState("");
   const [showCreateUserForm, setShowCreateUserForm] = useState(false);
   const [newUser, setNewUser] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'MEMBER'
+    name: "",
+    email: "",
+    password: "",
+    role: "MEMBER",
   });
 
   useEffect(() => {
@@ -40,28 +51,64 @@ const AdminDashboard = () => {
 
   const fetchAdminData = async () => {
     try {
-      // Fetch admin stats
-      const statsResponse = await adminAPI.getStats();
-      setStats(statsResponse.data.stats);
+      // Fetch all data
+      const [usersResponse, projectsResponse, tasksResponse, teamsResponse] =
+        await Promise.all([
+          userAPI.getAll(),
+          projectAPI.getAll(),
+          taskAPI.getAll(),
+          teamAPI.getAll(),
+        ]);
 
-      // Fetch recent activity
-      const activityResponse = await adminAPI.getRecentActivity();
-      setRecentActivity(activityResponse.data.activity);
+      const usersData = usersResponse.data.users || usersResponse.data || [];
+      const projectsData =
+        projectsResponse.data.projects || projectsResponse.data || [];
+      const tasksData = tasksResponse.data.tasks || tasksResponse.data || [];
+      const teamsData = teamsResponse.data.teams || teamsResponse.data || [];
 
-      // Fetch all data for management tabs
-      const [usersResponse, projectsResponse, tasksResponse, teamsResponse] = await Promise.all([
-        adminAPI.getAllUsers(),
-        adminAPI.getAllProjects(),
-        adminAPI.getAllTasks(),
-        adminAPI.getAllTeams()
-      ]);
+      setUsers(usersData);
+      setProjects(projectsData);
 
-      setUsers(usersResponse.data.users || []);
-      setProjects(projectsResponse.data.projects || []);
-      setTasks(tasksResponse.data.tasks || []);
-      setTeams(teamsResponse.data.teams || []);
+      // Calculate stats from data
+      const activeUsers = usersData.filter((u) => u.isActive).length;
+      const activeProjects = projectsData.filter(
+        (p) => p.status === "active"
+      ).length;
+      const completedTasks = tasksData.filter(
+        (t) => t.status === "completed"
+      ).length;
+      const inProgressTasks = tasksData.filter(
+        (t) => t.status === "in-progress"
+      ).length;
+
+      setStats({
+        totalUsers: usersData.length,
+        activeUsers: activeUsers,
+        totalTeams: teamsData.length,
+        totalProjects: projectsData.length,
+        activeProjects: activeProjects,
+        totalTasks: tasksData.length,
+        completedTasks: completedTasks,
+        inProgressTasks: inProgressTasks,
+      });
+
+      // Set recent activity (last 5 items sorted by date)
+      setRecentActivity({
+        recentTasks: tasksData
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 5),
+        recentProjects: projectsData
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 5),
+        recentTeams: teamsData
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 5),
+        recentUsers: usersData
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 5),
+      });
     } catch (error) {
-      console.error('Error fetching admin data:', error);
+      console.error("Error fetching admin data:", error);
     } finally {
       setLoading(false);
     }
@@ -69,20 +116,22 @@ const AdminDashboard = () => {
 
   const handleUserUpdate = async (userId, userData) => {
     try {
-      await adminAPI.updateUser(userId, userData);
+      await userAPI.update(userId, userData);
       fetchAdminData(); // Refresh data
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
+      alert("Failed to update user");
     }
   };
 
   const handleUserDelete = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await adminAPI.deleteUser(userId);
+        await userAPI.delete(userId);
         fetchAdminData(); // Refresh data
       } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error("Error deleting user:", error);
+        alert("Failed to delete user");
       }
     }
   };
@@ -90,18 +139,20 @@ const AdminDashboard = () => {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      await adminAPI.createUser(newUser);
-      setNewUser({ name: '', email: '', password: '', role: 'MEMBER' });
+      await authAPI.register(newUser);
+      setNewUser({ name: "", email: "", password: "", role: "MEMBER" });
       setShowCreateUserForm(false);
       fetchAdminData(); // Refresh data
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error("Error creating user:", error);
+      alert("Failed to create user");
     }
   };
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -118,38 +169,43 @@ const AdminDashboard = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-blue-100">Manage your project management system</p>
+            <p className="text-blue-100">
+              Manage your project management system
+            </p>
           </div>
           <div className="flex space-x-4">
             <button
-              onClick={() => setActiveTab('overview')}
+              onClick={() => setActiveTab("overview")}
               className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
-                activeTab === 'overview' ? 'bg-white text-blue-600' : 'bg-blue-500/20 text-white hover:bg-blue-500/30'
-              }`}
-            >
+                activeTab === "overview"
+                  ? "bg-white text-blue-600"
+                  : "bg-blue-500/20 text-white hover:bg-blue-500/30"
+              }`}>
               Overview
             </button>
             <button
-              onClick={() => setActiveTab('users')}
+              onClick={() => setActiveTab("users")}
               className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
-                activeTab === 'users' ? 'bg-white text-blue-600' : 'bg-blue-500/20 text-white hover:bg-blue-500/30'
-              }`}
-            >
+                activeTab === "users"
+                  ? "bg-white text-blue-600"
+                  : "bg-blue-500/20 text-white hover:bg-blue-500/30"
+              }`}>
               Users
             </button>
             <button
-              onClick={() => setActiveTab('projects')}
+              onClick={() => setActiveTab("projects")}
               className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
-                activeTab === 'projects' ? 'bg-white text-blue-600' : 'bg-blue-500/20 text-white hover:bg-blue-500/30'
-              }`}
-            >
+                activeTab === "projects"
+                  ? "bg-white text-blue-600"
+                  : "bg-blue-500/20 text-white hover:bg-blue-500/30"
+              }`}>
               Projects
             </button>
           </div>
         </div>
       </div>
 
-      {activeTab === 'overview' && (
+      {activeTab === "overview" && (
         <>
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -159,8 +215,12 @@ const AdminDashboard = () => {
                   <FaUser className="h-6 w-6 text-white" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Users</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Users
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalUsers}
+                  </p>
                 </div>
               </div>
             </div>
@@ -171,8 +231,12 @@ const AdminDashboard = () => {
                   <FaUsers className="h-6 w-6 text-white" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Active Users</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.activeUsers}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Active Users
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.activeUsers}
+                  </p>
                 </div>
               </div>
             </div>
@@ -183,8 +247,12 @@ const AdminDashboard = () => {
                   <FaProjectDiagram className="h-6 w-6 text-white" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Projects</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalProjects}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Projects
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalProjects}
+                  </p>
                 </div>
               </div>
             </div>
@@ -195,8 +263,12 @@ const AdminDashboard = () => {
                   <FaTasks className="h-6 w-6 text-white" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Tasks</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalTasks}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Tasks
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalTasks}
+                  </p>
                 </div>
               </div>
             </div>
@@ -210,8 +282,12 @@ const AdminDashboard = () => {
                   <FaTasks className="h-6 w-6 text-white" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">In Progress Tasks</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.inProgressTasks}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    In Progress Tasks
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.inProgressTasks}
+                  </p>
                 </div>
               </div>
             </div>
@@ -222,8 +298,12 @@ const AdminDashboard = () => {
                   <FaChartBar className="h-6 w-6 text-white" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Completed Tasks</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.completedTasks}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Completed Tasks
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.completedTasks}
+                  </p>
                 </div>
               </div>
             </div>
@@ -234,8 +314,12 @@ const AdminDashboard = () => {
                   <FaProjectDiagram className="h-6 w-6 text-white" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Active Projects</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.activeProjects}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Active Projects
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.activeProjects}
+                  </p>
                 </div>
               </div>
             </div>
@@ -251,18 +335,29 @@ const AdminDashboard = () => {
               {recentActivity.recentTasks.length > 0 ? (
                 <ul className="space-y-3">
                   {recentActivity.recentTasks.slice(0, 5).map((task) => (
-                    <li key={task._id} className="border-b pb-3 last:border-b-0 last:pb-0">
-                      <h3 className="font-medium text-gray-900">{task.title}</h3>
-                      <p className="text-sm text-gray-600">Project: {task.project?.name}</p>
+                    <li
+                      key={task._id}
+                      className="border-b pb-3 last:border-b-0 last:pb-0">
+                      <h3 className="font-medium text-gray-900">
+                        {task.title}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Project: {task.project?.name || "N/A"}
+                      </p>
                       <div className="mt-1 flex items-center text-xs text-gray-500">
-                        <span className={`px-2 py-1 rounded-full ${
-                          task.status === 'todo' ? 'bg-gray-100 text-gray-800' :
-                          task.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-green-100 text-green-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full ${
+                            task.status === "todo"
+                              ? "bg-gray-100 text-gray-800"
+                              : task.status === "in-progress"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-green-100 text-green-800"
+                          }`}>
                           {task.status}
                         </span>
-                        <span className="ml-2">{new Date(task.createdAt).toLocaleDateString()}</span>
+                        <span className="ml-2">
+                          {new Date(task.createdAt).toLocaleDateString()}
+                        </span>
                       </div>
                     </li>
                   ))}
@@ -275,24 +370,37 @@ const AdminDashboard = () => {
             {/* Recent Projects */}
             <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <FaProjectDiagram className="mr-2 text-purple-500" /> Recent Projects
+                <FaProjectDiagram className="mr-2 text-purple-500" /> Recent
+                Projects
               </h2>
               {recentActivity.recentProjects.length > 0 ? (
                 <ul className="space-y-3">
                   {recentActivity.recentProjects.slice(0, 5).map((project) => (
-                    <li key={project._id} className="border-b pb-3 last:border-b-0 last:pb-0">
-                      <h3 className="font-medium text-gray-900">{project.name}</h3>
-                      <p className="text-sm text-gray-600">Team: {project.team?.name}</p>
+                    <li
+                      key={project._id}
+                      className="border-b pb-3 last:border-b-0 last:pb-0">
+                      <h3 className="font-medium text-gray-900">
+                        {project.name}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Team: {project.team?.name || "N/A"}
+                      </p>
                       <div className="mt-1 flex items-center text-xs text-gray-500">
-                        <span className={`px-2 py-1 rounded-full ${
-                          project.status === 'active' ? 'bg-green-100 text-green-800' :
-                          project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                          project.status === 'on-hold' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full ${
+                            project.status === "active"
+                              ? "bg-green-100 text-green-800"
+                              : project.status === "completed"
+                              ? "bg-blue-100 text-blue-800"
+                              : project.status === "on-hold"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                          }`}>
                           {project.status}
                         </span>
-                        <span className="ml-2">{new Date(project.createdAt).toLocaleDateString()}</span>
+                        <span className="ml-2">
+                          {new Date(project.createdAt).toLocaleDateString()}
+                        </span>
                       </div>
                     </li>
                   ))}
@@ -310,11 +418,15 @@ const AdminDashboard = () => {
               {recentActivity.recentTeams.length > 0 ? (
                 <ul className="space-y-3">
                   {recentActivity.recentTeams.slice(0, 5).map((team) => (
-                    <li key={team._id} className="border-b pb-3 last:border-b-0 last:pb-0">
+                    <li
+                      key={team._id}
+                      className="border-b pb-3 last:border-b-0 last:pb-0">
                       <h3 className="font-medium text-gray-900">{team.name}</h3>
-                      <p className="text-sm text-gray-600">Owner: {team.owner?.name}</p>
+                      <p className="text-sm text-gray-600">
+                        Owner: {team.owner?.name || "N/A"}
+                      </p>
                       <div className="mt-1 text-xs text-gray-500">
-                        {team.members?.length} members
+                        {team.members?.length || 0} members
                       </div>
                     </li>
                   ))}
@@ -327,10 +439,12 @@ const AdminDashboard = () => {
         </>
       )}
 
-      {activeTab === 'users' && (
+      {activeTab === "users" && (
         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">User Management</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              User Management
+            </h2>
             <div className="flex space-x-4">
               <div className="relative">
                 <input
@@ -344,34 +458,41 @@ const AdminDashboard = () => {
               </div>
               <button
                 onClick={() => setShowCreateUserForm(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
-              >
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
                 + Create User
               </button>
             </div>
           </div>
 
           {showCreateUserForm && (
-            <div className="bg-white p-6 rounded-xl shadow-lg mb-6 border border-gray-200">
+            <div className="bg-gray-50 p-6 rounded-xl mb-6 border border-gray-200">
               <h3 className="text-lg font-semibold mb-4">Create New User</h3>
               <form onSubmit={handleCreateUser} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Name
+                    </label>
                     <input
                       type="text"
                       value={newUser.name}
-                      onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, name: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email
+                    </label>
                     <input
                       type="email"
                       value={newUser.email}
-                      onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, email: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       required
                     />
@@ -379,22 +500,29 @@ const AdminDashboard = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Password
+                    </label>
                     <input
                       type="password"
                       value={newUser.password}
-                      onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, password: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Role
+                    </label>
                     <select
                       value={newUser.role}
-                      onChange={(e) => setNewUser({...newUser, role: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, role: e.target.value })
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                       <option value="MEMBER">Member</option>
                       <option value="ADMIN">Admin</option>
                     </select>
@@ -403,15 +531,13 @@ const AdminDashboard = () => {
                 <div className="flex space-x-3 pt-2">
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                  >
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
                     Create User
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowCreateUserForm(false)}
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors duration-200"
-                  >
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors duration-200">
                     Cancel
                   </button>
                 </div>
@@ -423,10 +549,18 @@ const AdminDashboard = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    User
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -435,52 +569,66 @@ const AdminDashboard = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 w-10 h-10 rounded-full flex items-center justify-center">
-                          <span className="text-white font-bold">{user.name.charAt(0)}</span>
+                          <span className="text-white font-bold">
+                            {user.name?.charAt(0) || "U"}
+                          </span>
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.email}
+                          </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <select
                         value={user.role}
-                        onChange={(e) => handleUserUpdate(user._id, { ...user, role: e.target.value })}
+                        onChange={(e) =>
+                          handleUserUpdate(user._id, {
+                            ...user,
+                            role: e.target.value,
+                          })
+                        }
                         className={`px-2 py-1 rounded-full text-xs ${
-                          user.role === 'ADMIN'
-                            ? 'bg-red-100 text-red-800 border border-red-200'
-                            : 'bg-blue-100 text-blue-800 border border-blue-200'
-                        }`}
-                      >
+                          user.role === "ADMIN"
+                            ? "bg-red-100 text-red-800 border border-red-200"
+                            : "bg-blue-100 text-blue-800 border border-blue-200"
+                        }`}>
                         <option value="MEMBER">Member</option>
                         <option value="ADMIN">Admin</option>
                       </select>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        user.isActive
-                          ? 'bg-green-100 text-green-800 border border-green-200'
-                          : 'bg-red-100 text-red-800 border border-red-200'
-                      }`}>
-                        {user.isActive ? 'Active' : 'Inactive'}
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          user.isActive
+                            ? "bg-green-100 text-green-800 border border-green-200"
+                            : "bg-red-100 text-red-800 border border-red-200"
+                        }`}>
+                        {user.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
-                        onClick={() => handleUserUpdate(user._id, { ...user, isActive: !user.isActive })}
+                        onClick={() =>
+                          handleUserUpdate(user._id, {
+                            ...user,
+                            isActive: !user.isActive,
+                          })
+                        }
                         className={`mr-3 ${
                           user.isActive
-                            ? 'text-red-600 hover:text-red-900'
-                            : 'text-green-600 hover:text-green-900'
-                        }`}
-                      >
-                        {user.isActive ? 'Deactivate' : 'Activate'}
+                            ? "text-red-600 hover:text-red-900"
+                            : "text-green-600 hover:text-green-900"
+                        }`}>
+                        {user.isActive ? "Deactivate" : "Activate"}
                       </button>
                       <button
                         onClick={() => handleUserDelete(user._id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
+                        className="text-red-600 hover:text-red-900">
                         Delete
                       </button>
                     </td>
@@ -492,24 +640,34 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {activeTab === 'projects' && (
+      {activeTab === "projects" && (
         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Project Management</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">
+            Project Management
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.slice(0, 6).map((project) => (
               <div key={project._id} className="border rounded-lg p-4">
                 <h3 className="font-semibold text-lg">{project.name}</h3>
-                <p className="text-sm text-gray-600 mt-1">{project.description}</p>
+                <p className="text-sm text-gray-600 mt-1">
+                  {project.description}
+                </p>
                 <div className="mt-3 flex items-center justify-between text-sm">
-                  <span className={`px-2 py-1 rounded-full ${
-                    project.status === 'active' ? 'bg-green-100 text-green-800' :
-                    project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                    project.status === 'on-hold' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded-full ${
+                      project.status === "active"
+                        ? "bg-green-100 text-green-800"
+                        : project.status === "completed"
+                        ? "bg-blue-100 text-blue-800"
+                        : project.status === "on-hold"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                    }`}>
                     {project.status}
                   </span>
-                  <span className="text-gray-500">{project.members?.length} members</span>
+                  <span className="text-gray-500">
+                    {project.members?.length || 0} members
+                  </span>
                 </div>
               </div>
             ))}

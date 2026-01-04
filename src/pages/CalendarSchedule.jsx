@@ -9,7 +9,6 @@ import {
   FaCheckCircle,
   FaUsers,
 } from "react-icons/fa";
-import { calendarAPI } from "../utils/api";
 
 const CalendarSchedule = () => {
   const navigate = useNavigate();
@@ -22,10 +21,15 @@ const CalendarSchedule = () => {
     fetchEvents();
   }, []);
 
-  const fetchEvents = async () => {
+  const fetchEvents = () => {
     try {
-      const response = await calendarAPI.getEvents();
-      setEvents(response.data.events || []);
+      // Load events from localStorage (same as main calendar)
+      const storedEvents = localStorage.getItem("calendar_events");
+      if (storedEvents) {
+        setEvents(JSON.parse(storedEvents));
+      } else {
+        setEvents([]);
+      }
     } catch (error) {
       console.error("Error fetching events:", error);
       setEvents([]);
@@ -46,15 +50,26 @@ const CalendarSchedule = () => {
     setShowEventModal(true);
   };
 
-  const handleSaveEvent = async () => {
+  const handleSaveEvent = () => {
     try {
+      let updatedEvents;
       if (currentEvent._id) {
-        await calendarAPI.updateEvent(currentEvent._id, currentEvent);
+        // Update existing event
+        updatedEvents = events.map((e) =>
+          e._id === currentEvent._id ? currentEvent : e
+        );
       } else {
-        await calendarAPI.createEvent(currentEvent);
+        // Create new event
+        const newEvent = {
+          ...currentEvent,
+          _id: Date.now().toString(),
+        };
+        updatedEvents = [...events, newEvent];
       }
+      setEvents(updatedEvents);
+      localStorage.setItem("calendar_events", JSON.stringify(updatedEvents));
       setShowEventModal(false);
-      fetchEvents();
+      setCurrentEvent(null);
     } catch (error) {
       console.error("Error saving event:", error);
       alert("Failed to save event. Please try again.");

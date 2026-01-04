@@ -46,10 +46,26 @@ const MessagesNew = () => {
 
     setSending(true);
     try {
-      // In a real app, you'd have a dedicated message API
-      // For now, we'll simulate sending
+      // Note: In a production environment, this would call a dedicated messaging API
+      // For this demo, we're simulating the message send
+      // The backend would need a POST /api/messages endpoint to create actual messages
+
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Message sent successfully!");
+
+      const recipientUser = users.find((u) => u._id === formData.recipient);
+
+      alert(
+        `Message sent successfully!\n\n` +
+          `To: ${recipientUser?.name || "User"}\n` +
+          `Subject: ${formData.subject}\n\n` +
+          `Note: This is a demo. In production, this would create a real message ` +
+          `that appears in the recipient's inbox and your sent folder.`
+      );
+
+      // Clear form
+      setFormData({ recipient: "", subject: "", message: "" });
+
+      // Navigate to sent messages
       navigate("/messages/sent");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -209,6 +225,18 @@ const MessagesNew = () => {
             <li>• Double-check the recipient before sending</li>
             <li>• Save drafts to continue editing later</li>
           </ul>
+        </div>
+
+        {/* Demo Note */}
+        <div className="bg-amber-50 p-6 rounded-xl border border-amber-200">
+          <h3 className="font-semibold text-amber-900 mb-2">📝 Demo Note</h3>
+          <p className="text-sm text-amber-800">
+            This messaging feature is currently in demo mode. Messages are
+            simulated and won't appear in the actual inbox. In a production
+            environment, this would integrate with a dedicated messaging API to
+            create real messages that appear in both the sender's "Sent" folder
+            and the recipient's "Inbox".
+          </p>
         </div>
       </div>
     </div>
