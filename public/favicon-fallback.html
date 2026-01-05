@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Favicon Generator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      canvas {
+        border: 2px solid #ddd;
+        margin: 20px 0;
+        border-radius: 8px;
+      }
+      button {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 5px;
+      }
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      }
+      .info {
+        background: #eff6ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 4px solid #3b82f6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 ProjectFlow Favicon Generator</h1>
+      <div class="info">
+        <strong>Instructions:</strong> Click the buttons below to download
+        different sizes of the favicon. Save them in the
+        <code>public/</code> folder.
+      </div>
+
+      <h3>Preview:</h3>
+      <canvas id="preview" width="128" height="128"></canvas>
+
+      <div>
+        <button onclick="downloadFavicon(16)">Download 16x16</button>
+        <button onclick="downloadFavicon(32)">Download 32x32</button>
+        <button onclick="downloadFavicon(180)">Download 180x180 (Apple)</button>
+        <button onclick="downloadFavicon(192)">Download 192x192 (PWA)</button>
+        <button onclick="downloadFavicon(512)">Download 512x512 (PWA)</button>
+      </div>
+    </div>
+
+    <script>
+      // Draw the favicon
+      function drawFavicon(canvas, size) {
+        const ctx = canvas.getContext("2d");
+        const scale = size / 128;
+
+        ctx.clearRect(0, 0, size, size);
+        ctx.save();
+        ctx.scale(scale, scale);
+
+        // Background circle
+        const gradient = ctx.createLinearGradient(0, 0, 128, 128);
+        gradient.addColorStop(0, "#3b82f6");
+        gradient.addColorStop(1, "#6366f1");
+
+        ctx.fillStyle = gradient;
+        ctx.globalAlpha = 0.1;
+        ctx.beginPath();
+        ctx.arc(64, 64, 60, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Rocket body
+        ctx.fillStyle = gradient;
+        ctx.strokeStyle = "#1e40af";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(64, 20);
+        ctx.lineTo(75, 50);
+        ctx.lineTo(75, 75);
+        ctx.lineTo(64, 85);
+        ctx.lineTo(53, 75);
+        ctx.lineTo(53, 50);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Rocket nose
+        ctx.fillStyle = "#1e40af";
+        ctx.globalAlpha = 0.9;
+        ctx.beginPath();
+        ctx.moveTo(64, 10);
+        ctx.lineTo(75, 30);
+        ctx.lineTo(53, 30);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Window outer
+        ctx.fillStyle = "#60a5fa";
+        ctx.globalAlpha = 0.8;
+        ctx.beginPath();
+        ctx.arc(64, 40, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Window inner
+        ctx.fillStyle = "#dbeafe";
+        ctx.beginPath();
+        ctx.arc(64, 40, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Left wing
+        ctx.fillStyle = "#3b82f6";
+        ctx.strokeStyle = "#1e40af";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(53, 60);
+        ctx.lineTo(40, 75);
+        ctx.lineTo(45, 80);
+        ctx.lineTo(53, 70);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Right wing
+        ctx.beginPath();
+        ctx.moveTo(75, 60);
+        ctx.lineTo(88, 75);
+        ctx.lineTo(83, 80);
+        ctx.lineTo(75, 70);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Flame gradient
+        const flameGradient = ctx.createLinearGradient(64, 85, 64, 115);
+        flameGradient.addColorStop(0, "#fbbf24");
+        flameGradient.addColorStop(0.5, "#f59e0b");
+        flameGradient.addColorStop(1, "#ef4444");
+
+        // Main flame
+        ctx.fillStyle = flameGradient;
+        ctx.globalAlpha = 0.9;
+        ctx.beginPath();
+        ctx.moveTo(64, 85);
+        ctx.lineTo(70, 95);
+        ctx.lineTo(68, 105);
+        ctx.lineTo(64, 115);
+        ctx.lineTo(60, 105);
+        ctx.lineTo(58, 95);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Left flame
+        ctx.fillStyle = "#fbbf24";
+        ctx.globalAlpha = 0.7;
+        ctx.beginPath();
+        ctx.moveTo(58, 85);
+        ctx.lineTo(55, 95);
+        ctx.lineTo(56, 102);
+        ctx.lineTo(60, 108);
+        ctx.closePath();
+        ctx.fill();
+
+        // Right flame
+        ctx.beginPath();
+        ctx.moveTo(70, 85);
+        ctx.lineTo(73, 95);
+        ctx.lineTo(72, 102);
+        ctx.lineTo(68, 108);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Stars
+        ctx.fillStyle = "#fbbf24";
+        ctx.globalAlpha = 0.8;
+        ctx.beginPath();
+        ctx.arc(25, 30, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.globalAlpha = 0.6;
+        ctx.beginPath();
+        ctx.arc(100, 45, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#60a5fa";
+        ctx.globalAlpha = 0.7;
+        ctx.beginPath();
+        ctx.arc(90, 25, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath();
+        ctx.arc(35, 55, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      // Draw preview
+      const previewCanvas = document.getElementById("preview");
+      drawFavicon(previewCanvas, 128);
+
+      // Download function
+      function downloadFavicon(size) {
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        drawFavicon(canvas, size);
+
+        canvas.toBlob(function (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+
+          if (size === 16) a.download = "favicon-16x16.png";
+          else if (size === 32) a.download = "favicon-32x32.png";
+          else if (size === 180) a.download = "apple-touch-icon.png";
+          else if (size === 192) a.download = "favicon-192x192.png";
+          else if (size === 512) a.download = "favicon-512x512.png";
+
+          a.click();
+          URL.revokeObjectURL(url);
+        });
+      }
+    </script>
+  </body>
+</html>
