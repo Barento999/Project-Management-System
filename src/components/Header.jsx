@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   FaBars,
-  FaBell,
   FaUser,
   FaSignOutAlt,
   FaRocket,
@@ -13,6 +12,7 @@ import {
   FaProjectDiagram,
 } from "react-icons/fa";
 import NotificationBell from "./NotificationBell";
+import GlobalSearch from "./GlobalSearch";
 
 const Header = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
@@ -77,25 +77,12 @@ const Header = ({ onMenuClick }) => {
           </div>
 
           <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4 flex-shrink-0">
-            {/* Search Bar - hidden on mobile */}
-            <div className="hidden lg:block relative">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-48 xl:w-64 px-4 py-2 pl-10 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all duration-200 text-sm"
-              />
-              <svg
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-            </div>
+            {/* Global Search - hidden on mobile */}
+            {user && (
+              <div className="hidden lg:block">
+                <GlobalSearch />
+              </div>
+            )}
 
             {/* Notification Bell - only show when user is logged in */}
             {user && <NotificationBell />}

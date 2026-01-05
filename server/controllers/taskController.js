@@ -76,37 +76,59 @@ const createTask = asyncHandler(async (req, res) => {
 
 // @desc    Get all tasks (for admin) or user's tasks
 // @route   GET /api/tasks
+// @desc    Get all tasks
+// @route   GET /api/tasks
 // @access  Private
 const getTasks = asyncHandler(async (req, res) => {
-  let tasks;
+  const { search, status, priority } = req.query;
 
+  let baseQuery = {};
+
+  // Build base query based on user role
   if (req.user.role === "ADMIN") {
     // Admin can see all tasks
-    tasks = await Task.find({})
-      .populate("project", "name")
-      .populate("assignedTo", "name email")
-      .populate("createdBy", "name email")
-      .sort({ createdAt: -1 });
+    baseQuery = {};
   } else {
     // Regular user can see tasks assigned to them or tasks in projects they're part of
-    tasks = await Task.find({
+    const userProjects = await Project.find({
+      $or: [{ owner: req.user._id }, { members: req.user._id }],
+    }).select("_id");
+
+    baseQuery = {
       $or: [
         { assignedTo: req.user._id },
         { createdBy: req.user._id },
-        {
-          project: {
-            $in: await Project.find({
-              $or: [{ owner: req.user._id }, { members: req.user._id }],
-            }).select("_id"),
-          },
-        },
+        { project: { $in: userProjects.map((p) => p._id) } },
       ],
-    })
-      .populate("project", "name")
-      .populate("assignedTo", "name email")
-      .populate("createdBy", "name email")
-      .sort({ createdAt: -1 });
+    };
   }
+
+  // Add search filter
+  if (search) {
+    baseQuery.$and = baseQuery.$and || [];
+    baseQuery.$and.push({
+      $or: [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ],
+    });
+  }
+
+  // Add status filter
+  if (status && status !== "all") {
+    baseQuery.status = status;
+  }
+
+  // Add priority filter
+  if (priority && priority !== "all") {
+    baseQuery.priority = priority;
+  }
+
+  const tasks = await Task.find(baseQuery)
+    .populate("project", "name")
+    .populate("assignedTo", "name email")
+    .populate("createdBy", "name email")
+    .sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,
@@ -341,6 +363,135 @@ const getTasksByStatus = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Add dependency to task
+// @route   POST /api/tasks/:id/dependencies
+// @access  Private
+const addDependency = asyncHandler(async (req, res) => {
+  const { dependencyId } = req.body;
+
+  if (!dependencyId) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide dependency task ID",
+    });
+  }
+
+  const task = await Task.findById(req.params.id);
+  const dependencyTask = await Task.findById(dependencyId);
+
+  if (!task || !dependencyTask) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  // Check for circular dependency
+  if (dependencyTask.dependencies.includes(task._id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Circular dependency detected",
+    });
+  }
+
+  // Check if dependency already exists
+  if (task.dependencies.includes(dependencyId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Dependency already exists",
+    });
+  }
+
+  task.dependencies.push(dependencyId);
+  await task.save();
+
+  const updatedTask = await Task.findById(task._id)
+    .populate("dependencies", "title status priority dueDate")
+    .populate("project", "name")
+    .populate("assignedTo", "name email")
+    .populate("createdBy", "name email");
+
+  res.json({
+    success: true,
+    message: "Dependency added successfully",
+    task: updatedTask,
+  });
+});
+
+// @desc    Remove dependency from task
+// @route   DELETE /api/tasks/:id/dependencies/:dependencyId
+// @access  Private
+const removeDependency = asyncHandler(async (req, res) => {
+  const task = await Task.findById(req.params.id);
+
+  if (!task) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  task.dependencies = task.dependencies.filter(
+    (dep) => dep.toString() !== req.params.dependencyId
+  );
+  await task.save();
+
+  const updatedTask = await Task.findById(task._id)
+    .populate("dependencies", "title status priority dueDate")
+    .populate("project", "name")
+    .populate("assignedTo", "name email")
+    .populate("createdBy", "name email");
+
+  res.json({
+    success: true,
+    message: "Dependency removed successfully",
+    task: updatedTask,
+  });
+});
+
+// @desc    Get task dependencies
+// @route   GET /api/tasks/:id/dependencies
+// @access  Private
+const getTaskDependencies = asyncHandler(async (req, res) => {
+  const task = await Task.findById(req.params.id).populate({
+    path: "dependencies",
+    select: "title status priority dueDate project assignedTo",
+    populate: [
+      { path: "project", select: "name" },
+      { path: "assignedTo", select: "name email" },
+    ],
+  });
+
+  if (!task) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  res.json({
+    success: true,
+    dependencies: task.dependencies,
+  });
+});
+
+// @desc    Get tasks that depend on this task
+// @route   GET /api/tasks/:id/dependents
+// @access  Private
+const getTaskDependents = asyncHandler(async (req, res) => {
+  const dependents = await Task.find({
+    dependencies: req.params.id,
+  })
+    .populate("project", "name")
+    .populate("assignedTo", "name email")
+    .populate("createdBy", "name email");
+
+  res.json({
+    success: true,
+    dependents,
+  });
+});
+
 module.exports = {
   createTask,
   getTasks,
@@ -349,4 +500,174 @@ module.exports = {
   deleteTask,
   getTasksByProject,
   getTasksByStatus,
+  addDependency,
+  removeDependency,
+  getTaskDependencies,
+  getTaskDependents,
+};
+
+// @desc    Add subtask to task
+// @route   POST /api/tasks/:id/subtasks
+// @access  Private
+const addSubtask = asyncHandler(async (req, res) => {
+  const { title } = req.body;
+
+  if (!title) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide subtask title",
+    });
+  }
+
+  const task = await Task.findById(req.params.id);
+
+  if (!task) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  task.subtasks.push({ title, isCompleted: false });
+  await task.save();
+
+  const updatedTask = await Task.findById(task._id)
+    .populate("project", "name")
+    .populate("assignedTo", "name email")
+    .populate("createdBy", "name email");
+
+  res.json({
+    success: true,
+    message: "Subtask added successfully",
+    task: updatedTask,
+  });
+});
+
+// @desc    Update subtask
+// @route   PUT /api/tasks/:id/subtasks/:subtaskId
+// @access  Private
+const updateSubtask = asyncHandler(async (req, res) => {
+  const { title, isCompleted } = req.body;
+
+  const task = await Task.findById(req.params.id);
+
+  if (!task) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  const subtask = task.subtasks.id(req.params.subtaskId);
+
+  if (!subtask) {
+    return res.status(404).json({
+      success: false,
+      message: "Subtask not found",
+    });
+  }
+
+  if (title !== undefined) subtask.title = title;
+  if (isCompleted !== undefined) {
+    subtask.isCompleted = isCompleted;
+    subtask.completedAt = isCompleted ? new Date() : null;
+  }
+
+  await task.save();
+
+  const updatedTask = await Task.findById(task._id)
+    .populate("project", "name")
+    .populate("assignedTo", "name email")
+    .populate("createdBy", "name email");
+
+  res.json({
+    success: true,
+    message: "Subtask updated successfully",
+    task: updatedTask,
+  });
+});
+
+// @desc    Delete subtask
+// @route   DELETE /api/tasks/:id/subtasks/:subtaskId
+// @access  Private
+const deleteSubtask = asyncHandler(async (req, res) => {
+  const task = await Task.findById(req.params.id);
+
+  if (!task) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  task.subtasks.pull(req.params.subtaskId);
+  await task.save();
+
+  const updatedTask = await Task.findById(task._id)
+    .populate("project", "name")
+    .populate("assignedTo", "name email")
+    .populate("createdBy", "name email");
+
+  res.json({
+    success: true,
+    message: "Subtask deleted successfully",
+    task: updatedTask,
+  });
+});
+
+// @desc    Toggle subtask completion
+// @route   PATCH /api/tasks/:id/subtasks/:subtaskId/toggle
+// @access  Private
+const toggleSubtask = asyncHandler(async (req, res) => {
+  const task = await Task.findById(req.params.id);
+
+  if (!task) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  const subtask = task.subtasks.id(req.params.subtaskId);
+
+  if (!subtask) {
+    return res.status(404).json({
+      success: false,
+      message: "Subtask not found",
+    });
+  }
+
+  subtask.isCompleted = !subtask.isCompleted;
+  subtask.completedAt = subtask.isCompleted ? new Date() : null;
+
+  await task.save();
+
+  const updatedTask = await Task.findById(task._id)
+    .populate("project", "name")
+    .populate("assignedTo", "name email")
+    .populate("createdBy", "name email");
+
+  res.json({
+    success: true,
+    message: "Subtask toggled successfully",
+    task: updatedTask,
+  });
+});
+
+module.exports = {
+  createTask,
+  getTasks,
+  getTask,
+  updateTask,
+  deleteTask,
+  getTasksByProject,
+  getTasksByStatus,
+  addDependency,
+  removeDependency,
+  getTaskDependencies,
+  getTaskDependents,
+  addSubtask,
+  updateSubtask,
+  deleteSubtask,
+  toggleSubtask,
 };

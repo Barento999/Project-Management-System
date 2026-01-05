@@ -31,6 +31,12 @@ import {
   FaFileInvoice,
   FaUsersCog,
   FaClock,
+  FaUserCheck,
+  FaDollarSign,
+  FaTh,
+  FaRunning,
+  FaPlug,
+  FaBook,
 } from "react-icons/fa";
 
 const Sidebar = ({ onClose }) => {
@@ -77,6 +83,11 @@ const Sidebar = ({ onClose }) => {
       icon: <FaClipboardList />,
     },
     {
+      name: "Kanban Board",
+      path: "/tasks/board",
+      icon: <FaTh />,
+    },
+    {
       name: "Time Tracking",
       path: "/time-tracking",
       icon: <FaClock />,
@@ -92,9 +103,39 @@ const Sidebar = ({ onClose }) => {
       icon: <FaCalendarCheck />,
     },
     {
+      name: "Resources",
+      path: "/resources",
+      icon: <FaUserCheck />,
+    },
+    {
+      name: "Budget",
+      path: "/budget",
+      icon: <FaDollarSign />,
+    },
+    {
+      name: "Gantt Chart",
+      path: "/gantt",
+      icon: <FaChartBar />,
+    },
+    {
+      name: "Sprints",
+      path: "/sprints",
+      icon: <FaRunning />,
+    },
+    {
       name: "Reports",
       path: "/reports",
       icon: <FaChartLine />,
+    },
+    {
+      name: "Integrations",
+      path: "/integrations",
+      icon: <FaPlug />,
+    },
+    {
+      name: "API Docs",
+      path: "/api-docs",
+      icon: <FaBook />,
     },
     {
       name: "Documents",
@@ -130,6 +171,11 @@ const Sidebar = ({ onClose }) => {
       name: "Admin Logs",
       path: "/admin/logs",
       icon: <FaClipboardList />,
+    },
+    {
+      name: "System Settings",
+      path: "/settings",
+      icon: <FaCog2 />,
     },
   ];
 

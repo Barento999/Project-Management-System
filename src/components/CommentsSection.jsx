@@ -19,10 +19,6 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
   const [editContent, setEditContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchComments();
-  }, [entityType, entityId, fetchComments]);
-
   const fetchComments = async () => {
     try {
       setLoading(true);
@@ -34,6 +30,11 @@ const CommentsSection = ({ entityType, entityId, entityName }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityType, entityId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

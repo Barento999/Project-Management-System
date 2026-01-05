@@ -16,6 +16,8 @@ import ActivityFeed from "../components/ActivityFeed";
 import FileUpload from "../components/FileUpload";
 import FileList from "../components/FileList";
 import TaskAssignment from "../components/TaskAssignment";
+import TaskDependencies from "../components/TaskDependencies";
+import TaskSubtasks from "../components/TaskSubtasks";
 
 const TaskDetailsBeautiful = () => {
   const { id } = useParams();
@@ -197,6 +199,24 @@ const TaskDetailsBeautiful = () => {
               📊 Activity
             </button>
             <button
+              onClick={() => setActiveTab("dependencies")}
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all ${
+                activeTab === "dependencies"
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "text-gray-500 hover:bg-gray-100"
+              }`}>
+              🔗 Dependencies
+            </button>
+            <button
+              onClick={() => setActiveTab("subtasks")}
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all ${
+                activeTab === "subtasks"
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "text-gray-500 hover:bg-gray-100"
+              }`}>
+              ✅ Subtasks
+            </button>
+            <button
               onClick={() => setActiveTab("files")}
               className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all ${
                 activeTab === "files"
@@ -218,6 +238,13 @@ const TaskDetailsBeautiful = () => {
             />
           ) : activeTab === "activity" ? (
             <ActivityFeed entityType="Task" entityId={task._id} />
+          ) : activeTab === "dependencies" ? (
+            <TaskDependencies
+              taskId={task._id}
+              projectId={task.project?._id || task.project}
+            />
+          ) : activeTab === "subtasks" ? (
+            <TaskSubtasks task={task} onUpdate={setTask} />
           ) : (
             <div className="space-y-6">
               <FileUpload

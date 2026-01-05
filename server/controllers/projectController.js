@@ -57,28 +57,46 @@ const createProject = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get all projects (for admin) or user's projects
+// @desc    Get all projects
 // @route   GET /api/projects
 // @access  Private
 const getProjects = asyncHandler(async (req, res) => {
-  let projects;
+  const { search, status } = req.query;
 
+  let query = {};
+
+  // Build base query based on user role
   if (req.user.role === "ADMIN") {
     // Admin can see all projects
-    projects = await Project.find({})
-      .populate("team", "name")
-      .populate("owner", "name email")
-      .populate("members", "name email")
-      .sort({ createdAt: -1 });
+    query = {};
   } else {
     // Regular user can see only their projects
-    projects = await Project.find({
+    query = {
       $or: [{ owner: req.user._id }, { members: req.user._id }],
-    })
-      .populate("team", "name")
-      .populate("owner", "name email")
-      .populate("members", "name email")
-      .sort({ createdAt: -1 });
+    };
   }
+
+  // Add search filter
+  if (search) {
+    query.$and = query.$and || [];
+    query.$and.push({
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ],
+    });
+  }
+
+  // Add status filter
+  if (status && status !== "all") {
+    query.status = status;
+  }
+
+  const projects = await Project.find(query)
+    .populate("team", "name")
+    .populate("owner", "name email")
+    .populate("members", "name email")
+    .sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,

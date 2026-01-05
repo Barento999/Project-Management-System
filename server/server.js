@@ -18,6 +18,7 @@ const notificationRoutes = require("./routes/notifications");
 const activityLogRoutes = require("./routes/activityLogs");
 const timeTrackingRoutes = require("./routes/timeTracking");
 const fileRoutes = require("./routes/files");
+const budgetRoutes = require("./routes/budgets");
 
 // Import error handler middleware
 const { errorHandler } = require("./middleware/errorHandler");
@@ -44,6 +45,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/activity-logs", activityLogRoutes);
 app.use("/api/time-tracking", timeTrackingRoutes);
 app.use("/api/files", fileRoutes);
+app.use("/api/budgets", budgetRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

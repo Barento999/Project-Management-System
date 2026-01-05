@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -7,17 +7,12 @@ import AdminRoute from "./components/AdminRoute";
 // Import pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
 import DashboardBeautiful from "./pages/DashboardBeautiful";
 import Profile from "./pages/Profile";
 import ProfileBeautiful from "./pages/ProfileBeautiful";
-import Teams from "./pages/Teams";
 import TeamsBeautiful from "./pages/TeamsBeautiful";
 import TeamDetailsBeautiful from "./pages/TeamDetailsBeautiful";
-import Projects from "./pages/Projects";
-import ProjectsSimple from "./pages/ProjectsSimple";
 import ProjectsBeautiful from "./pages/ProjectsBeautiful";
-import Tasks from "./pages/Tasks";
 import TasksBeautiful from "./pages/TasksBeautiful";
 import TaskDetailsBeautiful from "./pages/TaskDetailsBeautiful";
 import ProjectDetailsBeautiful from "./pages/ProjectDetailsBeautiful";
@@ -31,6 +26,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import Calendar from "./pages/Calendar";
+import CalendarTasks from "./pages/CalendarTasks";
 import Reports from "./pages/Reports";
 import Documents from "./pages/Documents";
 import Messages from "./pages/Messages";
@@ -52,9 +48,17 @@ import ReportsTeams from "./pages/ReportsTeams";
 import DocumentsMy from "./pages/DocumentsMy";
 import DocumentsShared from "./pages/DocumentsShared";
 import AdminSettings from "./pages/AdminSettings";
-import AdminLogs from "./pages/AdminLogs";
 import AdminUsers from "./pages/AdminUsers";
 import LandingPage from "./pages/LandingPage";
+import ResourceManagement from "./pages/ResourceManagement";
+import BudgetTracking from "./pages/BudgetTracking";
+import KanbanBoard from "./pages/KanbanBoard";
+import SystemSettings from "./pages/SystemSettings";
+import AuditLogs from "./pages/AuditLogs";
+import GanttChart from "./pages/GanttChart";
+import SprintBoard from "./pages/SprintBoard";
+import Integrations from "./pages/Integrations";
+import APIDocs from "./pages/APIDocs";
 
 // Import layout components
 import Header from "./components/Header";
@@ -226,6 +230,14 @@ function App() {
                           path="/tasks/board"
                           element={
                             <ProtectedRoute>
+                              <KanbanBoard />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/tasks/board"
+                          element={
+                            <ProtectedRoute>
                               <TasksBoard />
                             </ProtectedRoute>
                           }
@@ -263,6 +275,14 @@ function App() {
                           }
                         />
                         <Route
+                          path="/calendar/tasks"
+                          element={
+                            <ProtectedRoute>
+                              <CalendarTasks />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
                           path="/calendar/team"
                           element={
                             <ProtectedRoute>
@@ -275,6 +295,22 @@ function App() {
                           element={
                             <ProtectedRoute>
                               <CalendarSchedule />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/resources"
+                          element={
+                            <ProtectedRoute>
+                              <ResourceManagement />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/budget"
+                          element={
+                            <ProtectedRoute>
+                              <BudgetTracking />
                             </ProtectedRoute>
                           }
                         />
@@ -370,6 +406,14 @@ function App() {
                           path="/settings"
                           element={
                             <ProtectedRoute>
+                              <SystemSettings />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/settings"
+                          element={
+                            <ProtectedRoute>
                               <Profile />
                             </ProtectedRoute>
                           }
@@ -403,8 +447,41 @@ function App() {
                           path="/admin/logs"
                           element={
                             <AdminRoute>
-                              <AdminLogs />
+                              <AuditLogs />
                             </AdminRoute>
+                          }
+                        />
+                        {/* Advanced Features */}
+                        <Route
+                          path="/gantt"
+                          element={
+                            <ProtectedRoute>
+                              <GanttChart />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/sprints"
+                          element={
+                            <ProtectedRoute>
+                              <SprintBoard />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/integrations"
+                          element={
+                            <ProtectedRoute>
+                              <Integrations />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/api-docs"
+                          element={
+                            <ProtectedRoute>
+                              <APIDocs />
+                            </ProtectedRoute>
                           }
                         />
                         {/* 404 route */}

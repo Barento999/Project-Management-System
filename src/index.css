@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-First Responsive Optimizations */
+@layer utilities {
+  /* Touch-friendly tap targets */
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent text selection on buttons */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Smooth scrolling for mobile */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.6; /* Comfortable line spacing */
@@ -86,6 +108,16 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-color: #f8fafc; /* Soft light gray app background */
+  /* Mobile optimizations */
+  -webkit-tap-highlight-color: rgba(37, 99, 235, 0.1);
+  touch-action: manipulation;
+}
+
+/* Mobile viewport fix */
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: -webkit-fill-available;
+  }
 }
 
 /* Hide scrollbar in sidebar navigation only */
@@ -132,6 +164,31 @@ textarea::placeholder {
 #root {
   background-color: #f8fafc;
   min-height: 100vh;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  #root {
+    min-height: -webkit-fill-available;
+  }
+
+  /* Improve mobile scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Better mobile input handling */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+
+  /* Mobile-friendly buttons */
+  button,
+  a {
+    -webkit-tap-highlight-color: rgba(37, 99, 235, 0.1);
+  }
 }
 
 /* Page content background */

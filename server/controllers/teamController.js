@@ -35,25 +35,40 @@ const createTeam = asyncHandler(async (req, res) => {
 
 // @desc    Get all teams (for admin) or user's teams
 // @route   GET /api/teams
+// @desc    Get all teams
+// @route   GET /api/teams
 // @access  Private
 const getTeams = asyncHandler(async (req, res) => {
-  let teams;
+  const { search } = req.query;
 
+  let query = {};
+
+  // Build base query based on user role
   if (req.user.role === "ADMIN") {
     // Admin can see all teams
-    teams = await Team.find({})
-      .populate("owner", "name email")
-      .populate("members", "name email")
-      .sort({ createdAt: -1 });
+    query = {};
   } else {
     // Regular user can see only their teams
-    teams = await Team.find({
+    query = {
       $or: [{ owner: req.user._id }, { members: req.user._id }],
-    })
-      .populate("owner", "name email")
-      .populate("members", "name email")
-      .sort({ createdAt: -1 });
+    };
   }
+
+  // Add search filter
+  if (search) {
+    query.$and = query.$and || [];
+    query.$and.push({
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ],
+    });
+  }
+
+  const teams = await Team.find(query)
+    .populate("owner", "name email")
+    .populate("members", "name email")
+    .sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,

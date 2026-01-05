@@ -73,6 +73,19 @@ export const taskAPI = {
   assign: (id, userId) =>
     API.put(`/tasks/${id}/assign`, { assignedTo: userId }),
   updateStatus: (id, status) => API.put(`/tasks/${id}/status`, { status }),
+  addDependency: (id, dependencyId) =>
+    API.post(`/tasks/${id}/dependencies`, { dependencyId }),
+  removeDependency: (id, dependencyId) =>
+    API.delete(`/tasks/${id}/dependencies/${dependencyId}`),
+  getDependencies: (id) => API.get(`/tasks/${id}/dependencies`),
+  getDependents: (id) => API.get(`/tasks/${id}/dependents`),
+  addSubtask: (id, data) => API.post(`/tasks/${id}/subtasks`, data),
+  updateSubtask: (id, subtaskId, data) =>
+    API.put(`/tasks/${id}/subtasks/${subtaskId}`, data),
+  deleteSubtask: (id, subtaskId) =>
+    API.delete(`/tasks/${id}/subtasks/${subtaskId}`),
+  toggleSubtask: (id, subtaskId) =>
+    API.patch(`/tasks/${id}/subtasks/${subtaskId}/toggle`),
 };
 
 // Team API
@@ -156,6 +169,21 @@ export const adminAPI = {
   getAllUsers: (params) => API.get("/admin/users", { params }),
   getAllProjects: (params) => API.get("/admin/projects", { params }),
   getAllTasks: (params) => API.get("/admin/tasks", { params }),
+};
+
+// Budget API
+export const budgetAPI = {
+  getAll: () => API.get("/budgets"),
+  getByProject: (projectId) => API.get(`/budgets/project/${projectId}`),
+  createOrUpdate: (projectId, data) =>
+    API.post(`/budgets/project/${projectId}`, data),
+  addExpense: (projectId, data) =>
+    API.post(`/budgets/project/${projectId}/expenses`, data),
+  updateExpense: (projectId, expenseId, data) =>
+    API.put(`/budgets/project/${projectId}/expenses/${expenseId}`, data),
+  deleteExpense: (projectId, expenseId) =>
+    API.delete(`/budgets/project/${projectId}/expenses/${expenseId}`),
+  getSummary: () => API.get("/budgets/summary"),
 };
 
 export default API;

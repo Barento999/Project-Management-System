@@ -7,8 +7,17 @@ import {
   FaChartLine,
   FaArrowLeft,
   FaChartBar,
+  FaFilePdf,
+  FaFileExcel,
+  FaFileCsv,
 } from "react-icons/fa";
 import { teamAPI, projectAPI } from "../services/api";
+import {
+  exportToCSV,
+  exportToExcel,
+  exportToPDF,
+  formatDataForExport,
+} from "../utils/exportUtils";
 
 const ReportsTeams = () => {
   const navigate = useNavigate();
@@ -37,6 +46,25 @@ const ReportsTeams = () => {
     }
   };
 
+  const handleExport = (format) => {
+    const formattedData = formatDataForExport(teams, "teams");
+    const filename = `team-report-${new Date().toISOString().split("T")[0]}`;
+
+    switch (format) {
+      case "csv":
+        exportToCSV(formattedData, filename);
+        break;
+      case "excel":
+        exportToExcel(formattedData, filename);
+        break;
+      case "pdf":
+        exportToPDF("report-content", filename);
+        break;
+      default:
+        break;
+    }
+  };
+
   const totalMembers = teams.reduce(
     (acc, team) => acc + (team.members?.length || 0),
     0
@@ -60,23 +88,49 @@ const ReportsTeams = () => {
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6" id="report-content">
         {/* Header */}
         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-          <div className="flex items-center gap-3 mb-2">
-            <button
-              onClick={() => navigate("/reports")}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-all">
-              <FaArrowLeft className="text-gray-600" />
-            </button>
-            <div className="p-3 bg-purple-600 rounded-xl">
-              <FaUsers className="text-white text-2xl" />
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate("/reports")}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-all">
+                <FaArrowLeft className="text-gray-600" />
+              </button>
+              <div className="p-3 bg-purple-600 rounded-xl">
+                <FaUsers className="text-white text-2xl" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Team Reports
+                </h1>
+                <p className="text-gray-500 mt-1">
+                  View analytics and metrics for your teams
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Team Reports</h1>
-              <p className="text-gray-500 mt-1">
-                View analytics and metrics for your teams
-              </p>
+
+            {/* Export Buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleExport("csv")}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all"
+                title="Export to CSV">
+                <FaFileCsv /> CSV
+              </button>
+              <button
+                onClick={() => handleExport("excel")}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+                title="Export to Excel">
+                <FaFileExcel /> Excel
+              </button>
+              <button
+                onClick={() => handleExport("pdf")}
+                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                title="Export to PDF">
+                <FaFilePdf /> PDF
+              </button>
             </div>
           </div>
         </div>
