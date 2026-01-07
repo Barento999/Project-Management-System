@@ -28,7 +28,11 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: true, // Allow all origins for local network testing
+    origin: [
+      "http://localhost:5173",
+      "http://10.232.229.123:5173",
+      "https://project-management-system-b.vercel.app",
+    ],
     credentials: true,
   })
 );
