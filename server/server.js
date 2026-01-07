@@ -26,7 +26,13 @@ const { errorHandler } = require("./middleware/errorHandler");
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://project-management-system-b.vercel.app/"],
+    credentials: true,
+  })
+);
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
