@@ -1,101 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <defs>
-    <linearGradient id="rocketGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="flameGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#ef4444;stop-opacity:1" />
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="20" fill="#2563EB"/>
   
-  <!-- Background Circle -->
-  <circle cx="64" cy="64" r="60" fill="url(#rocketGradient)" opacity="0.1"/>
+  <!-- Letter P with Flow Arrow Design -->
+  <g fill="#FFFFFF">
+    <!-- P Letter -->
+    <path d="M 25 25 L 25 75 L 30 75 L 30 52 L 50 52 C 60 52 65 47 65 38 C 65 29 60 25 50 25 Z M 30 30 L 48 30 C 55 30 60 32 60 38 C 60 44 55 47 48 47 L 30 47 Z"/>
+    
+    <!-- Flow Arrow -->
+    <path d="M 55 55 L 75 55 L 75 50 L 85 60 L 75 70 L 75 65 L 55 65 Z"/>
+  </g>
   
-  <!-- Rocket Body -->
-  <path d="M 64 20 L 75 50 L 75 75 L 64 85 L 53 75 L 53 50 Z" 
-        fill="url(#rocketGradient)" 
-        stroke="#1e40af" 
-        stroke-width="2"
-        filter="url(#glow)"/>
-  
-  <!-- Rocket Nose Cone -->
-  <path d="M 64 10 L 75 30 L 53 30 Z" 
-        fill="#1e40af" 
-        opacity="0.9"/>
-  
-  <!-- Window -->
-  <circle cx="64" cy="40" r="8" fill="#60a5fa" opacity="0.8"/>
-  <circle cx="64" cy="40" r="5" fill="#dbeafe"/>
-  
-  <!-- Left Wing -->
-  <path d="M 53 60 L 40 75 L 45 80 L 53 70 Z" 
-        fill="#3b82f6" 
-        stroke="#1e40af" 
-        stroke-width="1.5"/>
-  
-  <!-- Right Wing -->
-  <path d="M 75 60 L 88 75 L 83 80 L 75 70 Z" 
-        fill="#3b82f6" 
-        stroke="#1e40af" 
-        stroke-width="1.5"/>
-  
-  <!-- Flame - Main -->
-  <path d="M 64 85 L 70 95 L 68 105 L 64 115 L 60 105 L 58 95 Z" 
-        fill="url(#flameGradient)" 
-        opacity="0.9">
-    <animate attributeName="d" 
-             dur="0.5s" 
-             repeatCount="indefinite"
-             values="M 64 85 L 70 95 L 68 105 L 64 115 L 60 105 L 58 95 Z;
-                     M 64 85 L 70 95 L 68 108 L 64 118 L 60 108 L 58 95 Z;
-                     M 64 85 L 70 95 L 68 105 L 64 115 L 60 105 L 58 95 Z"/>
-  </path>
-  
-  <!-- Flame - Left -->
-  <path d="M 58 85 L 55 95 L 56 102 L 60 108 Z" 
-        fill="#fbbf24" 
-        opacity="0.7">
-    <animate attributeName="d" 
-             dur="0.4s" 
-             repeatCount="indefinite"
-             values="M 58 85 L 55 95 L 56 102 L 60 108 Z;
-                     M 58 85 L 55 95 L 56 105 L 60 110 Z;
-                     M 58 85 L 55 95 L 56 102 L 60 108 Z"/>
-  </path>
-  
-  <!-- Flame - Right -->
-  <path d="M 70 85 L 73 95 L 72 102 L 68 108 Z" 
-        fill="#fbbf24" 
-        opacity="0.7">
-    <animate attributeName="d" 
-             dur="0.4s" 
-             repeatCount="indefinite"
-             values="M 70 85 L 73 95 L 72 102 L 68 108 Z;
-                     M 70 85 L 73 95 L 72 105 L 68 110 Z;
-                     M 70 85 L 73 95 L 72 102 L 68 108 Z"/>
-  </path>
-  
-  <!-- Stars -->
-  <circle cx="25" cy="30" r="2" fill="#fbbf24" opacity="0.8">
-    <animate attributeName="opacity" dur="1s" repeatCount="indefinite" values="0.8;0.3;0.8"/>
-  </circle>
-  <circle cx="100" cy="45" r="2" fill="#fbbf24" opacity="0.6">
-    <animate attributeName="opacity" dur="1.5s" repeatCount="indefinite" values="0.6;0.2;0.6"/>
-  </circle>
-  <circle cx="90" cy="25" r="1.5" fill="#60a5fa" opacity="0.7">
-    <animate attributeName="opacity" dur="2s" repeatCount="indefinite" values="0.7;0.3;0.7"/>
-  </circle>
-  <circle cx="35" cy="55" r="1.5" fill="#60a5fa" opacity="0.5">
-    <animate attributeName="opacity" dur="1.8s" repeatCount="indefinite" values="0.5;0.2;0.5"/>
-  </circle>
+  <!-- Accent Dot -->
+  <circle cx="70" cy="35" r="4" fill="#60A5FA"/>
 </svg>

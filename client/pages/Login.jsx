@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import {
@@ -234,7 +234,7 @@ const Login = () => {
 
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-500">
-            © 2024 ProjectFlow. All rights reserved.
+            © {new Date().getFullYear()} ProjectFlow. All rights reserved.
           </p>
         </div>
       </div>

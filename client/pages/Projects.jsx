@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { projectAPI, teamAPI } from "../services/api";
 import { FaPlus, FaEdit, FaTrash, FaFolder, FaUsers } from "react-icons/fa";
 

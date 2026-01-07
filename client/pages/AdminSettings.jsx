@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaSave, FaCog, FaShieldAlt, FaBell, FaDatabase } from "react-icons/fa";
 
 const AdminSettings = () => {

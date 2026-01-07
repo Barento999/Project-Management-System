@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaBook, FaCode, FaKey, FaCopy, FaCheckCircle } from "react-icons/fa";
 
 const APIDocs = () => {

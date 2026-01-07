@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -8,7 +8,6 @@ import AdminRoute from "./components/AdminRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DashboardBeautiful from "./pages/DashboardBeautiful";
-import Profile from "./pages/Profile";
 import ProfileBeautiful from "./pages/ProfileBeautiful";
 import TeamsBeautiful from "./pages/TeamsBeautiful";
 import TeamDetailsBeautiful from "./pages/TeamDetailsBeautiful";
@@ -36,8 +35,6 @@ import MessagesNew from "./pages/MessagesNew";
 import ProjectsCreate from "./pages/ProjectsCreate";
 import TasksCreate from "./pages/TasksCreate";
 import TeamsCreate from "./pages/TeamsCreate";
-import TasksMy from "./pages/TasksMy";
-import TasksBoard from "./pages/TasksBoard";
 import TeamsDirectory from "./pages/TeamsDirectory";
 import ProjectsTemplates from "./pages/ProjectsTemplates";
 import CalendarTeam from "./pages/CalendarTeam";
@@ -211,14 +208,6 @@ function App() {
                           }
                         />
                         <Route
-                          path="/tasks/my"
-                          element={
-                            <ProtectedRoute>
-                              <TasksMy />
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
                           path="/tasks/create"
                           element={
                             <ProtectedRoute>
@@ -231,14 +220,6 @@ function App() {
                           element={
                             <ProtectedRoute>
                               <KanbanBoard />
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
-                          path="/tasks/board"
-                          element={
-                            <ProtectedRoute>
-                              <TasksBoard />
                             </ProtectedRoute>
                           }
                         />
@@ -407,14 +388,6 @@ function App() {
                           element={
                             <ProtectedRoute>
                               <SystemSettings />
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
-                          path="/settings"
-                          element={
-                            <ProtectedRoute>
-                              <Profile />
                             </ProtectedRoute>
                           }
                         />

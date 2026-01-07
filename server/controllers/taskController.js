@@ -332,11 +332,12 @@ const getTasksByStatus = asyncHandler(async (req, res) => {
   const { status } = req.params;
 
   // Validate status
-  const validStatuses = ["todo", "in-progress", "done"];
+  const validStatuses = ["todo", "in-progress", "review", "done"];
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
       success: false,
-      message: "Invalid status. Valid statuses are: todo, in-progress, done",
+      message:
+        "Invalid status. Valid statuses are: todo, in-progress, review, done",
     });
   }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaPlay, FaStop, FaClock } from "react-icons/fa";
 import { timeTrackingAPI } from "../services/api";
 

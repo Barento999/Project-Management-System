@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaBell, FaCheck, FaTrash, FaTimes } from "react-icons/fa";
 import { notificationAPI } from "../services/api";
 import { useNavigate } from "react-router-dom";

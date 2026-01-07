@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaUsers, FaArrowLeft, FaProjectDiagram } from "react-icons/fa";
 import { teamAPI } from "../services/api";
