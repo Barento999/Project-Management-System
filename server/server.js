@@ -59,34 +59,25 @@ app.use("/api/budgets", budgetRoutes);
 // Error handling middleware
 app.use(errorHandler);
 
+// Connect to MongoDB and start server
+const PORT = process.env.PORT || 5000;
+
 // Add a simple test route
 app.get("/", (req, res) => {
   res.json({ message: "Project Management API is running!" });
 });
-
-app.get("/api", (req, res) => {
-  res.json({ message: "Project Management API is running!" });
-});
-
-// Connect to MongoDB and start server
-const PORT = process.env.PORT || 5000;
 
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("MongoDB connected successfully");
 
-    // Only start server if not in Vercel serverless environment
-    if (process.env.VERCEL !== "1") {
-      app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-      });
-    }
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
   } catch (error) {
     console.error("Database connection error:", error);
-    if (process.env.VERCEL !== "1") {
-      process.exit(1);
-    }
+    process.exit(1);
   }
 };
 
