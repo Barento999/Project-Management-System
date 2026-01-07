@@ -28,10 +28,7 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://project-management-system-b.vercel.app",
-    ],
+    origin: true, // Allow all origins for local network testing
     credentials: true,
   })
 );
@@ -72,8 +69,13 @@ const connectDB = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("MongoDB connected successfully");
 
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on port ${PORT}`);
+      console.log(`Local: http://localhost:${PORT}`);
+      console.log(`Network: http://[YOUR_IP]:${PORT}`);
+      console.log("\nTo find your IP address:");
+      console.log("Windows: ipconfig");
+      console.log("Mac/Linux: ifconfig or ip addr");
     });
   } catch (error) {
     console.error("Database connection error:", error);
