@@ -1,166 +1,298 @@
-# Project Management System (PMS)
+<div align="center">
 
-A comprehensive, production-ready project management system built with the MERN stack (MongoDB, Express.js, React, Node.js). This system supports real-world project planning, execution, monitoring, and team collaboration with role-based access control.
+<img src="https://raw.githubusercontent.com/yourusername/project-management-system/main/client/public/favicon-icon.svg" alt="Project Management System Logo" width="120" height="120">
 
-## 🚀 Features
+# 🚀 Project Management System
 
-### ✅ Implemented Features
+### _Streamline Your Team's Workflow with Modern Project Management_
 
-#### User Management & Authentication
+[![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Express](https://img.shields.io/badge/Express-4.18-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-- User registration and login with JWT authentication
-- Role-based access control (ADMIN, PROJECT_MANAGER, MEMBER, CLIENT)
-- Password reset via email
-- Email verification
-- User profile management
-- Account activation/deactivation
-- Notification preferences
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Site-success?style=for-the-badge)](https://project-management-system-b.vercel.app)
+[![API Docs](https://img.shields.io/badge/📚_API-Documentation-blue?style=for-the-badge)](#-api-documentation)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-#### Project Management
+---
 
-- Create, update, archive, and delete projects
-- Project statuses: Planned, Active, In Progress, On Hold, Completed, Cancelled
-- Project priorities: Low, Medium, High, Critical
-- Assign multiple users to projects
-- Project milestones with due dates and completion tracking
-- Budget tracking (estimated vs actual)
-- Project timeline (start and end dates)
+### 💡 A comprehensive, enterprise-grade project management platform built with the MERN stack
 
-#### Task Management
+Plan • Execute • Monitor • Collaborate
 
-- Create and manage tasks under projects
-- Task statuses: To Do, In Progress, Review, Done
-- Task priorities: Low, Medium, High, Critical
-- Assign tasks to team members
-- Task dependencies
-- Subtasks support
-- Start date and due date tracking
-- Estimated vs actual hours tracking
-- File attachments
-- Tags for organization
+[Features](#-features) • [Demo](#-demo) • [Installation](#-quick-start) • [Documentation](#-documentation)
 
-#### Time Tracking
+</div>
 
-- Start/stop timers for tasks
-- Manual time entry
-- Track time per task, project, and user
-- Weekly and monthly timesheets
-- Billable hours tracking
-- Time reports and analytics
+---
 
-#### Collaboration & Communication
+## 📸 Demo
 
-- Comments on tasks and projects
-- @mentions in comments
-- Activity logs (who did what and when)
-- File attachments on tasks
+<div align="center">
 
-#### Notifications System
+### Dashboard Overview
 
-- In-app notifications
-- Email notifications for:
-  - Task assignments
-  - Deadline reminders
-  - Status changes
-  - Comments and mentions
-- Customizable notification preferences per user
-- Unread notification counter
+![Dashboard](https://via.placeholder.com/800x450/4F46E5/FFFFFF?text=Dashboard+Screenshot)
 
-#### Team Management
+### Project Management
 
-- Create and manage teams
-- Add/remove team members
-- Team-based project organization
-- Team directory
+<table>
+<tr>
+<td width="50%">
+<img src="https://via.placeholder.com/400x300/10B981/FFFFFF?text=Projects+View" alt="Projects View">
+<p align="center"><b>Projects Overview</b></p>
+</td>
+<td width="50%">
+<img src="https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=Task+Board" alt="Task Board">
+<p align="center"><b>Kanban Task Board</b></p>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Time+Tracking" alt="Time Tracking">
+<p align="center"><b>Time Tracking</b></p>
+</td>
+<td width="50%">
+<img src="https://via.placeholder.com/400x300/8B5CF6/FFFFFF?text=Analytics" alt="Analytics">
+<p align="center"><b>Analytics Dashboard</b></p>
+</td>
+</tr>
+</table>
 
-#### Admin Dashboard
+> 📝 **Note:** Replace placeholder images with actual screenshots of your application
 
-- System-wide statistics
-- User management
-- View all projects, tasks, and teams
-- Activity monitoring
-- Pagination and search
+</div>
 
-#### Security
+---
 
-- Secure password hashing with bcrypt
-- JWT token-based authentication
-- Protected API routes
-- Role-based authorization
-- Input validation and sanitization
+## ✨ Features
 
-### 🔄 In Progress / Planned Features
+<div align="center">
 
-- Advanced reporting and analytics
-- Resource management and workload view
-- Gantt charts
-- Agile/Scrum support (sprints, backlogs)
-- Advanced search and filtering
-- Export to PDF/CSV/Excel
-- Third-party integrations (Slack, Google Calendar)
-- Dark mode
-- Real-time updates with WebSockets
+### 🎯 Core Capabilities
 
-## 🏗️ Tech Stack
+</div>
 
-### Backend
+<table>
+<tr>
+<td width="33%" align="center">
 
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **MongoDB** - Database
-- **Mongoose** - ODM for MongoDB
-- **JWT** - Authentication
-- **bcryptjs** - Password hashing
+### 👥 User Management
 
-### Frontend
+🔐 JWT Authentication<br>
+📧 Email Verification<br>
+🔑 Password Reset<br>
+👤 Profile Management<br>
+🎭 Role-Based Access<br>
+✅ Account Control
 
-- **React 19** - UI library
-- **React Router** - Navigation
-- **Axios** - HTTP client
-- **Tailwind CSS** - Styling
-- **React Icons** - Icons
+</td>
+<td width="33%" align="center">
 
-### Development Tools
+### 📊 Project Management
 
-- **Vite** - Build tool
-- **ESLint** - Code linting
-- **Nodemon** - Auto-restart server
-- **Concurrently** - Run multiple commands
+📁 CRUD Operations<br>
+📈 Status Tracking<br>
+⭐ Priority Levels<br>
+👥 Team Assignment<br>
+🎯 Milestones<br>
+💰 Budget Tracking
 
-## 📦 Installation
+</td>
+<td width="33%" align="center">
+
+### ✅ Task Management
+
+📝 Task Creation<br>
+🔄 Status Workflow<br>
+🔗 Dependencies<br>
+📎 File Attachments<br>
+🏷️ Tags & Labels<br>
+⏱️ Time Estimation
+
+</td>
+</tr>
+<tr>
+<td width="33%" align="center">
+
+### ⏰ Time Tracking
+
+⏱️ Start/Stop Timers<br>
+✍️ Manual Entry<br>
+📅 Timesheets<br>
+💵 Billable Hours<br>
+📊 Time Reports<br>
+🎯 Task-based Tracking
+
+</td>
+<td width="33%" align="center">
+
+### 💬 Collaboration
+
+💭 Comments System<br>
+🔔 @Mentions<br>
+📜 Activity Logs<br>
+📁 File Sharing<br>
+🔄 Real-time Updates<br>
+👥 Team Chat
+
+</td>
+<td width="33%" align="center">
+
+### 🔔 Notifications
+
+🔔 In-App Alerts<br>
+📧 Email Notifications<br>
+⚙️ Custom Preferences<br>
+📊 Unread Counter<br>
+✅ Mark as Read<br>
+🎯 Smart Filtering
+
+</td>
+</tr>
+</table>
+
+<details>
+<summary><b>📋 View Complete Feature List</b></summary>
+
+<br>
+
+### User Management & Authentication
+
+- ✅ User registration and login with JWT authentication
+- ✅ Role-based access control (ADMIN, PROJECT_MANAGER, MEMBER, CLIENT)
+- ✅ Password reset via email
+- ✅ Email verification
+- ✅ User profile management
+- ✅ Account activation/deactivation
+- ✅ Notification preferences
+
+### Project Management
+
+- ✅ Create, update, archive, and delete projects
+- ✅ Project statuses: Planned, Active, In Progress, On Hold, Completed, Cancelled
+- ✅ Project priorities: Low, Medium, High, Critical
+- ✅ Assign multiple users to projects
+- ✅ Project milestones with due dates and completion tracking
+- ✅ Budget tracking (estimated vs actual)
+- ✅ Project timeline (start and end dates)
+
+### Task Management
+
+- ✅ Create and manage tasks under projects
+- ✅ Task statuses: To Do, In Progress, Review, Done
+- ✅ Task priorities: Low, Medium, High, Critical
+- ✅ Assign tasks to team members
+- ✅ Task dependencies
+- ✅ Subtasks support
+- ✅ Start date and due date tracking
+- ✅ Estimated vs actual hours tracking
+- ✅ File attachments
+- ✅ Tags for organization
+
+### Time Tracking
+
+- ✅ Start/stop timers for tasks
+- ✅ Manual time entry
+- ✅ Track time per task, project, and user
+- ✅ Weekly and monthly timesheets
+- ✅ Billable hours tracking
+- ✅ Time reports and analytics
+
+### Team Management
+
+- ✅ Create and manage teams
+- ✅ Add/remove team members
+- ✅ Team-based project organization
+- ✅ Team directory
+
+### Admin Dashboard
+
+- ✅ System-wide statistics
+- ✅ User management
+- ✅ View all projects, tasks, and teams
+- ✅ Activity monitoring
+- ✅ Pagination and search
+
+### Security
+
+- ✅ Secure password hashing with bcrypt
+- ✅ JWT token-based authentication
+- ✅ Protected API routes
+- ✅ Role-based authorization
+- ✅ Input validation and sanitization
+
+</details>
+
+---
+
+## 🛠️ Tech Stack
+
+<div align="center">
+
+### Frontend Technologies
+
+![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=flat-square&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7.3.1-646CFF?style=flat-square&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.19-06B6D4?style=flat-square&logo=tailwind-css&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router-6.30.2-CA4245?style=flat-square&logo=react-router&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-1.13.2-5A29E4?style=flat-square&logo=axios&logoColor=white)
+
+### Backend Technologies
+
+![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4.18.2-000000?style=flat-square&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-7.5.0-47A248?style=flat-square&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-7.5.0-880000?style=flat-square&logo=mongoose&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-9.0.2-000000?style=flat-square&logo=json-web-tokens&logoColor=white)
+
+### Deployment & Hosting
+
+![Vercel](https://img.shields.io/badge/Vercel-Frontend-000000?style=flat-square&logo=vercel&logoColor=white)
+![Render](https://img.shields.io/badge/Render-Backend-46E3B7?style=flat-square&logo=render&logoColor=white)
+![MongoDB Atlas](https://img.shields.io/badge/MongoDB_Atlas-Database-47A248?style=flat-square&logo=mongodb&logoColor=white)
+
+</div>
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- MongoDB (local or Atlas)
-- npm or yarn
-
-### Clone Repository
-
 ```bash
-git clone <repository-url>
-cd project-management
+node --version  # v16 or higher
+npm --version   # v8 or higher
+mongod --version # v5 or higher (or MongoDB Atlas account)
 ```
 
-### Install Dependencies
-
-#### Install root dependencies
+### Installation
 
 ```bash
-npm install
-```
+# 1️⃣ Clone the repository
+git clone https://github.com/yourusername/project-management-system.git
+cd project-management-system
 
-#### Install server dependencies
-
-```bash
+# 2️⃣ Install server dependencies
 cd server
 npm install
-cd ..
+
+# 3️⃣ Install client dependencies
+cd ../client
+npm install
+
+# 4️⃣ Set up environment variables
+# Create server/.env file (see Environment Setup below)
+
+# 5️⃣ Start development servers
+npm run dev:full
 ```
 
-### Environment Configuration
+### Environment Setup
 
-Create a `.env` file in the `server` directory:
+Create `server/.env`:
 
 ```env
 # Server Configuration
@@ -169,17 +301,13 @@ PORT=5000
 
 # Database
 MONGODB_URI=mongodb://localhost:27017/project_management
-# Or use MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/project_management
+# Or MongoDB Atlas: mongodb+srv://username:password@cluster.mongodb.net/dbname
 
 # JWT Configuration
-JWT_SECRET=your_super_secret_jwt_key_here
+JWT_SECRET=your_super_secret_jwt_key_change_this
 JWT_EXPIRE=7d
 
-# Bcrypt
-BCRYPT_ROUNDS=12
-
-# Email Configuration (for production)
+# Email Configuration (Gmail example)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
@@ -189,79 +317,68 @@ FROM_NAME=Project Management System
 
 # Frontend URL
 FRONTEND_URL=http://localhost:5173
-
-# File Upload
-MAX_FILE_SIZE=10485760
-UPLOAD_PATH=./uploads
 ```
 
-### Database Setup
+> 💡 **Tip:** Generate a secure JWT secret: `openssl rand -base64 32`
 
-If using local MongoDB:
+### Access the Application
 
-```bash
-# Start MongoDB service
-mongod
-```
+- 🌐 **Frontend:** http://localhost:5173
+- 🔌 **Backend API:** http://localhost:5000/api
+- ✅ **Health Check:** http://localhost:5000/api
 
-If using MongoDB Atlas:
+---
 
-1. Create a cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Get your connection string
-3. Update `MONGODB_URI` in `.env`
+## 📚 Documentation
 
-## 🚀 Running the Application
+<table>
+<tr>
+<td width="50%">
 
-### Development Mode
+### 📖 User Guides
 
-#### Run both frontend and backend concurrently:
+- [Getting Started](./docs/getting-started.md)
+- [User Manual](./docs/user-manual.md)
+- [Admin Guide](./docs/admin-guide.md)
+- [FAQ](./docs/faq.md)
 
-```bash
-npm run dev:full
-```
+</td>
+<td width="50%">
 
-#### Or run separately:
+### 🔧 Developer Docs
 
-**Backend only:**
+- [API Documentation](#-api-documentation)
+- [Architecture](./PROJECT_DESCRIPTION.md)
+- [Contributing](#-contributing)
+- [Deployment Guide](./docs/deployment.md)
 
-```bash
-npm run server
-# or
-cd server && npm run dev
-```
+</td>
+</tr>
+</table>
 
-**Frontend only:**
-
-```bash
-npm run client
-# or
-npm run dev
-```
-
-### Production Mode
-
-#### Build frontend:
-
-```bash
-npm run build
-```
-
-#### Start backend:
-
-```bash
-cd server
-npm start
-```
+---
 
 ## 📚 API Documentation
 
-### Base URL
+### 🔗 Base URL
 
 ```
-http://localhost:5000/api
+Development: http://localhost:5000/api
+Production: https://project-management-system-5k9e.onrender.com/api
 ```
 
-### Authentication Endpoints
+### 🔐 Authentication
+
+All protected endpoints require a JWT token:
+
+```bash
+Authorization: Bearer <your_jwt_token>
+```
+
+<details>
+<summary><b>🔑 Authentication Endpoints</b></summary>
+
+<br>
 
 | Method | Endpoint                      | Description             | Auth Required |
 | ------ | ----------------------------- | ----------------------- | ------------- |
@@ -274,7 +391,12 @@ http://localhost:5000/api
 | GET    | `/auth/profile`               | Get user profile        | Yes           |
 | PUT    | `/auth/profile`               | Update profile          | Yes           |
 
-### Project Endpoints
+</details>
+
+<details>
+<summary><b>📊 Project Endpoints</b></summary>
+
+<br>
 
 | Method | Endpoint                      | Description        | Auth Required |
 | ------ | ----------------------------- | ------------------ | ------------- |
@@ -286,7 +408,12 @@ http://localhost:5000/api
 | PUT    | `/projects/:id/add-member`    | Add member         | Yes           |
 | PUT    | `/projects/:id/remove-member` | Remove member      | Yes           |
 
-### Task Endpoints
+</details>
+
+<details>
+<summary><b>✅ Task Endpoints</b></summary>
+
+<br>
 
 | Method | Endpoint                    | Description          | Auth Required |
 | ------ | --------------------------- | -------------------- | ------------- |
@@ -298,7 +425,12 @@ http://localhost:5000/api
 | GET    | `/tasks/project/:projectId` | Get tasks by project | Yes           |
 | GET    | `/tasks/status/:status`     | Get tasks by status  | Yes           |
 
-### Time Tracking Endpoints
+</details>
+
+<details>
+<summary><b>⏰ Time Tracking Endpoints</b></summary>
+
+<br>
 
 | Method | Endpoint                   | Description       | Auth Required |
 | ------ | -------------------------- | ----------------- | ------------- |
@@ -311,135 +443,265 @@ http://localhost:5000/api
 | PUT    | `/time-tracking/:id`       | Update time entry | Yes           |
 | DELETE | `/time-tracking/:id`       | Delete time entry | Yes           |
 
-### Comment Endpoints
+</details>
 
-| Method | Endpoint                          | Description    | Auth Required |
-| ------ | --------------------------------- | -------------- | ------------- |
-| POST   | `/comments`                       | Create comment | Yes           |
-| GET    | `/comments/:entityType/:entityId` | Get comments   | Yes           |
-| PUT    | `/comments/:id`                   | Update comment | Yes           |
-| DELETE | `/comments/:id`                   | Delete comment | Yes           |
+---
 
-### Notification Endpoints
+## 👥 User Roles & Permissions
 
-| Method | Endpoint                      | Description         | Auth Required |
-| ------ | ----------------------------- | ------------------- | ------------- |
-| GET    | `/notifications`              | Get notifications   | Yes           |
-| GET    | `/notifications/unread-count` | Get unread count    | Yes           |
-| PUT    | `/notifications/read-all`     | Mark all as read    | Yes           |
-| PUT    | `/notifications/:id/read`     | Mark as read        | Yes           |
-| DELETE | `/notifications/:id`          | Delete notification | Yes           |
+<div align="center">
 
-## 🎯 User Roles & Permissions
+<table>
+<tr>
+<th width="15%">Role</th>
+<th width="45%">Permissions</th>
+<th width="40%">Use Case</th>
+</tr>
+<tr>
+<td align="center"><b>🔴 ADMIN</b></td>
+<td>
+• Full system access<br>
+• Manage all users & teams<br>
+• View system analytics<br>
+• Access admin dashboard
+</td>
+<td>System administrators, IT managers</td>
+</tr>
+<tr>
+<td align="center"><b>🟡 PROJECT_MANAGER</b></td>
+<td>
+• Create & manage projects<br>
+• Assign tasks & resources<br>
+• Set deadlines & priorities<br>
+• Generate reports
+</td>
+<td>Team leads, project managers</td>
+</tr>
+<tr>
+<td align="center"><b>🟢 MEMBER</b></td>
+<td>
+• View assigned projects<br>
+• Update task status<br>
+• Track personal time<br>
+• Comment & collaborate
+</td>
+<td>Team members, developers, designers</td>
+</tr>
+<tr>
+<td align="center"><b>🔵 CLIENT</b></td>
+<td>
+• Read-only access<br>
+• View project progress<br>
+• View deliverables<br>
+• Cannot modify data
+</td>
+<td>External clients, stakeholders</td>
+</tr>
+</table>
 
-### ADMIN
+</div>
 
-- Full system access
-- Manage all users, teams, projects, and tasks
-- View system-wide analytics
-- Access admin dashboard
-
-### PROJECT_MANAGER
-
-- Create and manage projects
-- Assign tasks and resources
-- Set deadlines and priorities
-- Track progress and generate reports
-
-### MEMBER
-
-- View assigned projects and tasks
-- Update task status and time spent
-- Comment and collaborate
-- Track personal time
-
-### CLIENT
-
-- Read-only access to assigned projects
-- View project progress and deliverables
-- Cannot modify data
+---
 
 ## 📁 Project Structure
 
 ```
 project-management/
-├── server/
-│   ├── controllers/       # Request handlers
-│   ├── models/           # Database models
-│   ├── routes/           # API routes
-│   ├── middleware/       # Custom middleware
-│   ├── utils/            # Utility functions
-│   ├── server.js         # Entry point
-│   └── .env              # Environment variables
-├── src/
-│   ├── components/       # React components
-│   ├── pages/           # Page components
-│   ├── context/         # React context
-│   ├── utils/           # Frontend utilities
-│   ├── App.jsx          # Main app component
-│   └── main.jsx         # Entry point
-├── public/              # Static files
-└── package.json         # Dependencies
+│
+├── 📂 client/                    # Frontend React application
+│   ├── 📂 src/
+│   │   ├── 📂 components/       # Reusable React components
+│   │   ├── 📂 pages/            # Page components (routes)
+│   │   ├── 📂 context/          # React Context API
+│   │   ├── 📂 utils/            # Frontend utilities
+│   │   ├── 📄 App.jsx           # Main app component
+│   │   └── 📄 main.jsx          # React entry point
+│   ├── 📂 public/               # Static assets
+│   ├── 📄 index.html            # HTML template
+│   ├── 📄 vite.config.js        # Vite configuration
+│   ├── 📄 tailwind.config.js    # Tailwind CSS config
+│   └── 📄 package.json          # Frontend dependencies
+│
+├── 📂 server/                    # Backend Node.js application
+│   ├── 📂 controllers/          # Request handlers & business logic
+│   ├── 📂 models/               # MongoDB schemas & models
+│   ├── 📂 routes/               # API route definitions
+│   ├── 📂 middleware/           # Custom middleware (auth, errors)
+│   ├── 📂 utils/                # Utility functions & helpers
+│   ├── 📂 uploads/              # File upload directory
+│   ├── 📄 server.js             # Express server entry point
+│   ├── 📄 .env                  # Environment variables
+│   └── 📄 package.json          # Backend dependencies
+│
+├── 📄 README.md                  # Project documentation
+├── 📄 PROJECT_DESCRIPTION.md     # Detailed project info
+├── 📄 .gitignore                # Git ignore rules
+└── 📄 package.json              # Root package.json
 ```
+
+---
 
 ## 🧪 Testing
 
-### Test API Endpoints
+### Manual API Testing
 
-Use tools like Postman, Insomnia, or curl:
+<details>
+<summary><b>Example API Requests</b></summary>
+
+<br>
+
+**Register a New User:**
 
 ```bash
-# Register a user
 curl -X POST http://localhost:5000/api/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"name":"John Doe","email":"john@example.com","password":"password123"}'
-
-# Login
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"john@example.com","password":"password123"}'
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "SecurePass123!"
+  }'
 ```
 
-## 🔒 Security Best Practices
+**Login:**
 
-1. **Never commit `.env` files** - Add to `.gitignore`
-2. **Use strong JWT secrets** - Generate with `openssl rand -base64 32`
-3. **Enable CORS properly** - Configure for production domains
-4. **Rate limiting** - Implement to prevent abuse
-5. **Input validation** - Always validate and sanitize inputs
-6. **HTTPS in production** - Use SSL certificates
-7. **Regular updates** - Keep dependencies updated
+```bash
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john@example.com",
+    "password": "SecurePass123!"
+  }'
+```
+
+**Create a Project:**
+
+```bash
+curl -X POST http://localhost:5000/api/projects \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "name": "New Project",
+    "description": "Project description",
+    "status": "active",
+    "priority": "high"
+  }'
+```
+
+</details>
+
+---
+
+## 🔒 Security
+
+<div align="center">
+
+### Security Features
+
+</div>
+
+<table>
+<tr>
+<td width="50%">
+
+### ✅ Implemented
+
+- ✔️ JWT token authentication
+- ✔️ Password hashing (bcrypt)
+- ✔️ Environment variables
+- ✔️ CORS configuration
+- ✔️ Input validation
+- ✔️ Protected API routes
+- ✔️ Role-based access control
+
+</td>
+<td width="50%">
+
+### 🔐 Best Practices
+
+- 🔒 HTTPS in production
+- 🔒 Rate limiting (recommended)
+- 🔒 Request sanitization
+- 🔒 Security headers (helmet.js)
+- 🔒 Regular dependency updates
+- 🔒 MongoDB encryption
+- 🔒 2FA (optional)
+
+</td>
+</tr>
+</table>
+
+---
 
 ## 🐛 Troubleshooting
 
-### MongoDB Connection Issues
+<details>
+<summary><b>❌ MongoDB Connection Issues</b></summary>
+
+<br>
+
+**Check if MongoDB is running:**
 
 ```bash
-# Check if MongoDB is running
 mongod --version
-
-# Start MongoDB service
-# Windows: net start MongoDB
-# Mac: brew services start mongodb-community
-# Linux: sudo systemctl start mongod
 ```
 
-### Port Already in Use
+**Start MongoDB service:**
 
 ```bash
-# Find process using port 5000
-# Windows: netstat -ano | findstr :5000
-# Mac/Linux: lsof -i :5000
+# Windows
+net start MongoDB
 
-# Kill the process
-# Windows: taskkill /PID <PID> /F
-# Mac/Linux: kill -9 <PID>
+# macOS
+brew services start mongodb-community
+
+# Linux
+sudo systemctl start mongod
 ```
 
-### Dependencies Issues
+**Using MongoDB Atlas?**
+
+- Verify connection string in `.env`
+- Check IP whitelist in Atlas dashboard
+- Ensure database user has correct permissions
+
+</details>
+
+<details>
+<summary><b>❌ Port Already in Use</b></summary>
+
+<br>
+
+**Find process using the port:**
 
 ```bash
-# Clear node_modules and reinstall
+# Windows
+netstat -ano | findstr :5000
+
+# macOS/Linux
+lsof -i :5000
+```
+
+**Kill the process:**
+
+```bash
+# Windows
+taskkill /PID <PID> /F
+
+# macOS/Linux
+kill -9 <PID>
+```
+
+</details>
+
+<details>
+<summary><b>❌ Dependencies Issues</b></summary>
+
+<br>
+
+**Clear and reinstall:**
+
+```bash
+# Remove node_modules and package-lock.json
 rm -rf node_modules package-lock.json
 npm install
 
@@ -449,69 +711,247 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-## 📈 Performance Optimization
-
-1. **Database Indexing** - Create indexes on frequently queried fields
-2. **Pagination** - Implemented on all list endpoints
-3. **Caching** - Consider Redis for session management
-4. **Query Optimization** - Use `.select()` to limit fields
-5. **Lazy Loading** - Load data on demand in frontend
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 👥 Authors
-
-- Your Name - Initial work
-
-## 🙏 Acknowledgments
-
-- React team for the amazing library
-- Express.js community
-- MongoDB team
-- All contributors
-
-## 📞 Support
-
-For support, email support@yourapp.com or open an issue in the repository.
-
-## 🗺️ Roadmap
-
-See [FEATURE_ANALYSIS.md](./FEATURE_ANALYSIS.md) for detailed feature completion status and [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) for implementation details.
-
-### Q1 2024
-
-- [ ] Advanced reporting and analytics
-- [ ] Resource management dashboard
-- [ ] File upload system
-- [ ] Real-time notifications with WebSockets
-
-### Q2 2024
-
-- [ ] Gantt chart view
-- [ ] Agile/Scrum features
-- [ ] Mobile app (React Native)
-- [ ] Third-party integrations
-
-### Q3 2024
-
-- [ ] AI-powered insights
-- [ ] Advanced automation
-- [ ] Custom workflows
-- [ ] White-label options
+</details>
 
 ---
 
-**Built with ❤️ using the MERN Stack**
-#   P r o j e c t - M a n a g e m e n t - S y s t e m 
- 
- 
+## 📈 Performance
+
+<div align="center">
+
+### Optimization Features
+
+</div>
+
+<table>
+<tr>
+<td width="33%" align="center">
+
+### ⚡ Frontend
+
+Code Splitting<br>
+Vite Build<br>
+Image Optimization<br>
+Memoization<br>
+Debouncing
+
+</td>
+<td width="33%" align="center">
+
+### 🚀 Backend
+
+Database Indexing<br>
+Pagination<br>
+Query Optimization<br>
+Connection Pooling<br>
+Response Caching
+
+</td>
+<td width="33%" align="center">
+
+### 🌐 Deployment
+
+Global CDN<br>
+Gzip Compression<br>
+Code Minification<br>
+Tree Shaking<br>
+Asset Optimization
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+### How to Contribute
+
+1. **Fork the repository**
+2. **Clone your fork**
+   ```bash
+   git clone https://github.com/yourusername/project-management-system.git
+   ```
+3. **Create a feature branch**
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+4. **Make your changes**
+5. **Commit your changes**
+   ```bash
+   git commit -m 'Add some AmazingFeature'
+   ```
+6. **Push to your branch**
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+7. **Open a Pull Request**
+
+### Contribution Guidelines
+
+- ✅ Follow the existing code style
+- ✅ Write clear commit messages
+- ✅ Update documentation if needed
+- ✅ Test your changes thoroughly
+- ✅ One feature per pull request
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+<div align="center">
+
+**Your Name**
+
+[![GitHub](https://img.shields.io/badge/GitHub-@yourusername-181717?style=for-the-badge&logo=github)](https://github.com/yourusername)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Your_Name-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/yourprofile)
+[![Email](https://img.shields.io/badge/Email-your.email@example.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:your.email@example.com)
+
+</div>
+
+---
+
+## 🙏 Acknowledgments
+
+<div align="center">
+
+Special thanks to the amazing open-source community!
+
+**Technologies & Frameworks**
+
+- [React](https://reactjs.org/) - UI Library
+- [Express.js](https://expressjs.com/) - Web Framework
+- [MongoDB](https://www.mongodb.com/) - Database
+- [Tailwind CSS](https://tailwindcss.com/) - CSS Framework
+- [Vite](https://vitejs.dev/) - Build Tool
+
+**Hosting & Deployment**
+
+- [Vercel](https://vercel.com/) - Frontend Hosting
+- [Render](https://render.com/) - Backend Hosting
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) - Database Hosting
+
+</div>
+
+---
+
+## 📞 Support
+
+<div align="center">
+
+Need help? We're here for you!
+
+[![Email](https://img.shields.io/badge/📧_Email-support@yourapp.com-EA4335?style=for-the-badge)](mailto:support@yourapp.com)
+[![Discord](https://img.shields.io/badge/💬_Discord-Join_Community-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/yourserver)
+[![Issues](https://img.shields.io/badge/🐛_Issues-Report_Bug-red?style=for-the-badge)](https://github.com/yourusername/project-management-system/issues)
+[![Docs](https://img.shields.io/badge/📖_Docs-Full_Documentation-blue?style=for-the-badge)](./PROJECT_DESCRIPTION.md)
+
+</div>
+
+---
+
+## 🗺️ Roadmap
+
+<div align="center">
+
+### 🎯 Current Version (v1.0)
+
+</div>
+
+- ✅ User authentication & authorization
+- ✅ Project & task management
+- ✅ Time tracking system
+- ✅ Team collaboration tools
+- ✅ Real-time notifications
+- ✅ Budget tracking
+- ✅ Admin dashboard
+- ✅ File uploads
+- ✅ Email integration
+
+<div align="center">
+
+### 🚀 Upcoming Features
+
+</div>
+
+<table>
+<tr>
+<td width="33%">
+
+#### Q1 2024
+
+- [ ] 📊 Advanced analytics
+- [ ] 👥 Resource management
+- [ ] 📁 Enhanced file system
+- [ ] 🔔 WebSocket notifications
+
+</td>
+<td width="33%">
+
+#### Q2 2024
+
+- [ ] 📅 Gantt chart view
+- [ ] 🏃 Agile/Scrum features
+- [ ] 📱 Mobile app (React Native)
+- [ ] 🔗 Third-party integrations
+
+</td>
+<td width="33%">
+
+#### Q3 2024
+
+- [ ] 🤖 AI-powered insights
+- [ ] ⚡ Advanced automation
+- [ ] 🎨 Custom themes
+- [ ] 🌍 Multi-language support
+
+</td>
+</tr>
+</table>
+
+---
+
+<div align="center">
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/project-management-system&type=Date)](https://star-history.com/#yourusername/project-management-system&Date)
+
+---
+
+### 📊 Project Stats
+
+![GitHub stars](https://img.shields.io/github/stars/yourusername/project-management-system?style=social)
+![GitHub forks](https://img.shields.io/github/forks/yourusername/project-management-system?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/yourusername/project-management-system?style=social)
+
+![GitHub issues](https://img.shields.io/github/issues/yourusername/project-management-system)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/project-management-system)
+![GitHub last commit](https://img.shields.io/github/last-commit/yourusername/project-management-system)
+![GitHub repo size](https://img.shields.io/github/repo-size/yourusername/project-management-system)
+
+---
+
+### 💖 Built with Love using the MERN Stack
+
+**MongoDB** • **Express.js** • **React 19** • **Node.js** • **Tailwind CSS** • **JWT** • **Vite**
+
+---
+
+<img src="https://raw.githubusercontent.com/yourusername/project-management-system/main/client/public/favicon-icon.svg" alt="Logo" width="60" height="60">
+
+**[⬆ Back to Top](#-project-management-system)**
+
+---
+
+Made with ❤️ by [Your Name](https://github.com/yourusername)
+
+</div>

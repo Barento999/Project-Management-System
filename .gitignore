@@ -37,4 +37,82 @@ Thumbs.db
 # Build artifacts
 build/
 coverage/
-*.md
+
+# Documentation - Keep only essential files
+# Keep: README.md, PROJECT_DESCRIPTION.md
+# Ignore: All other documentation files
+
+# Deployment guides (temporary/local use only)
+DEPLOY_*.md
+DEPLOYMENT_*.md
+FINAL_*.md
+FIX_*.md
+WHY_*.md
+DO_THIS_NOW.md
+VERCEL_ENV_SETUP.md
+LOCAL_NETWORK_SETUP.md
+FIREWALL_FIX.md
+MOBILE_ACCESS_COMPLETE.md
+START_HERE.md
+
+# Feature completion docs (temporary)
+*_COMPLETE.md
+*_SUMMARY.md
+*_GUIDE.md
+*_QUICK_START.md
+*_VERIFICATION.md
+*_APPLIED.md
+*_STANDARDIZED.md
+*_STATUS.md
+FEATURE_*.md
+PHASE*.md
+ALL_*.md
+EVERYTHING_*.md
+WORKING_NOW.md
+SUCCESS.md
+ISSUE_RESOLVED.md
+ISSUES_FIXED.md
+
+# Test and troubleshooting docs
+TEST_*.md
+TESTING_GUIDE.md
+TROUBLESHOOTING.md
+QUICK_*.md
+
+# Design and implementation docs (keep in repo if needed, or move to wiki)
+DESIGN_SYSTEM.md
+IMPLEMENTATION_*.md
+INTEGRATION_COMPLETE.md
+UI_*.md
+UX_*.md
+BUTTON_*.md
+COLOR_*.md
+TEXT_*.md
+TYPOGRAPHY_*.md
+FORMS_*.md
+TABLES_*.md
+
+# Batch/shell scripts (local development only)
+*.bat
+*.sh
+!install-email.sh
+
+# Test scripts (keep if needed for CI/CD)
+test-*.cjs
+test-*.js
+!test-react-setup.js
+
+# HTML test files
+check-*.html
+
+# Temporary files
+*.tmp
+*.temp
+verify-*.cjs
+extract-*.cjs
+get-*.cjs
+diagnose-*.bat
+restart-*.bat
+start-*.bat
+setup-*.bat
+fix-*.bat
