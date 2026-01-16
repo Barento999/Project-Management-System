@@ -116,3 +116,9 @@ restart-*.bat
 start-*.bat
 setup-*.bat
 fix-*.bat
+cleanup-*.bat
+
+# Cleanup and status guide files
+GITHUB_READY.md
+FINAL_CLEANUP_GUIDE.md
+REPOSITORY_CLEANUP.md
